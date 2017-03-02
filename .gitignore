@@ -1,3 +1,4 @@
-/output/*.docx
+/output
 /node_modules
 /doc
+.env
