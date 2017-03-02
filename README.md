@@ -6,7 +6,7 @@
 
 ## Running the program
 
-`$ node index.js`
+`$ npm start`
 
 ## Viewing results
 

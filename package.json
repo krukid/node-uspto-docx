@@ -1,16 +1,27 @@
 {
-  "name": "nodedoc",
+  "name": "node-uspto-docx",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "repository": "krukid/node-uspto-docx",
+  "private": true,
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel-register": "^6.23.0",
+    "bluebird": "^3.4.7",
+    "cheerio": "^0.22.0",
     "docxtemplater": "^3.0.4",
     "docxtemplater-image-module": "^3.0.2",
-    "jszip": "^2.6.1"
+    "jszip": "^2.6.1",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1"
+  },
+  "devDependencies": {
+    "babel-preset-stage-3": "^6.22.0"
   }
 }
