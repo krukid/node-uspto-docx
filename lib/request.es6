@@ -1,0 +1,19 @@
+import rp from 'request-promise';
+
+export const rqSearch = rp.defaults({
+  gzip: true,
+  headers: {
+    'Accept-Language': 'en-US,en;q=0.8,ru;q=0.6',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  },
+});
+
+export function setCookie(jar, url, hash) {
+  Object.keys(hash).forEach(function(key) {
+    const cookieStr = `${key}=${encodeURIComponent(hash[key])}`;
+    const cookie = rp.cookie(cookieStr);
+    jar.setCookie(cookie, url);
+  })
+}
