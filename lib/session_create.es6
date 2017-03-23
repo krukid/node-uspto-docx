@@ -1,51 +1,67 @@
-import url from 'url';
-import cheerio from 'cheerio';
-import { rqSearch, setCookie } from './request';
+import Url from 'url';
+import Cheerio from 'cheerio';
+import { RpSearch, setCookie } from './request';
 
-function pathForSession() {
+/**
+ *
+ */
+
+function urlForSession() {
   return `http://${process.env.SEARCH}/bin/gate.exe?f=login&p_lang=english&p_d=trmk`;
 }
 
-function pathForSearchForm(path) {
+function urlForSearchForm(path) {
   return `http://${process.env.SEARCH}${path}`;
 }
 
-function pathForInitSearch() {
+function urlForInitSearch() {
   return `http://${process.env.SEARCH}/bin/gate.exe`;
 }
 
-function $searchLink($) {
-  return $('a[href^="/bin/gate.exe?f=search&state="]').eq(0);
+/**
+ *
+ */
+
+function $searchLink($doc) {
+  return $doc('a[href^="/bin/gate.exe?f=search&state="]').eq(0);
 }
+
+/**
+ *
+ */
 
 function extractState(searchUrl) {
-  return url.parse(searchUrl, true).query.state;
+  return Url.parse(searchUrl, true).query.state;
 }
 
+/**
+ *
+ */
+
 async function visitSessionPage(jar) {
-  const sessionUrl = pathForSession();
-  const sessionBody = await rqSearch({
+  const sessionUrl = urlForSession();
+  const sessionBody = await RpSearch({
     jar,
     uri: sessionUrl,
   });
-  console.log(jar.getCookies(sessionUrl)); // debug
+  // console.log(jar.getCookies(sessionUrl)); // debug
   return sessionBody;
 }
 
 async function visitFormPage(jar, formUrl) {
-  const formBody = await rqSearch({
+  const formBody = await RpSearch({
     jar,
     uri: formUrl,
   });
-  console.log(formBody);
-  console.log(jar.getCookies(formUrl)); // debug
+  // console.log(formBody);
+  // console.log(jar.getCookies(formUrl)); // debug
   return formBody;
 }
 
 async function postInitPage(jar, state, searchCode, perPage) {
-  const initUrl = pathForInitSearch();
+  const initUrl = urlForInitSearch();
   setCookie(jar, initUrl, {queryCookie: searchCode});
-  const initBody = await rqSearch({
+  const initBody = await RpSearch({
     jar,
     method: 'POST',
     uri: initUrl,
@@ -64,36 +80,33 @@ async function postInitPage(jar, state, searchCode, perPage) {
       'Cache-Control': 'max-age=0'
     },
   });
-  console.log(jar.getCookies(initUrl)); // debug
+  // console.log(jar.getCookies(initUrl)); // debug
   return initBody;
 }
 
-export default function sessionCreate(searchCode, perPage) {
-  return new Promise(async function(resolve, reject) {
-    const t0 = new Date();
-    let state = null;
-    let jar = rqSearch.jar();
-    try {
-      console.log("*** CREATING SESSION");
-      const sessionBody = await visitSessionPage(jar);
-      const $session = cheerio.load(sessionBody);
-      const formUrl = pathForSearchForm($searchLink($session).attr('href'));
-      console.log('* GOT SEARCH URL', formUrl, new Date() - t0);
-      state = extractState(formUrl);
+/**
+ *
+ */
 
-      console.log('*** GETTING SEARCH FORM');
-      const formBody = await visitFormPage(jar, formUrl);
-      console.log('* GOT SEARCH FORM', new Date() - t0);
+export default async function sessionCreate(searchCode, perPage) {
+  const t0 = new Date();
+  const jar = RpSearch.jar();
 
-      console.log('*** POSTING SEARCH FORM');
-      const initBody = await postInitPage(jar, state, searchCode, perPage);
-      console.log('* POSTED SEARCH', new Date() - t0);
-      console.log(initBody);
+  console.log("*** CREATING SESSION");
+  const sessionBody = await visitSessionPage(jar);
+  const $session = Cheerio.load(sessionBody);
+  const formUrl = urlForSearchForm($searchLink($session).attr('href'));
+  console.log('* GOT SEARCH URL', formUrl, new Date() - t0);
+  const state = extractState(formUrl);
 
-      resolve({state, jar, initBody});
+  console.log('*** GETTING SEARCH FORM');
+  const formBody = await visitFormPage(jar, formUrl);
+  console.log('* GOT SEARCH FORM', new Date() - t0);
 
-    } catch(error) {
-      reject(error);
-    }
-  });
+  console.log('*** POSTING SEARCH FORM');
+  const initBody = await postInitPage(jar, state, searchCode, perPage);
+  console.log('* POSTED SEARCH', new Date() - t0);
+  // console.log(initBody); // debug
+
+  return {state, jar, initBody};
 }

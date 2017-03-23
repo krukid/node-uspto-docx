@@ -1,6 +1,6 @@
-import rp from 'request-promise';
+import Rp from 'request-promise';
 
-export const rqSearch = rp.defaults({
+export const RpSearch = Rp.defaults({
   gzip: true,
   headers: {
     'Accept-Language': 'en-US,en;q=0.8,ru;q=0.6',
@@ -13,7 +13,7 @@ export const rqSearch = rp.defaults({
 export function setCookie(jar, url, hash) {
   Object.keys(hash).forEach(function(key) {
     const cookieStr = `${key}=${encodeURIComponent(hash[key])}`;
-    const cookie = rp.cookie(cookieStr);
+    const cookie = Rp.cookie(cookieStr);
     jar.setCookie(cookie, url);
   })
 }

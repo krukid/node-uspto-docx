@@ -19,6 +19,7 @@
     "docxtemplater": "^3.0.4",
     "docxtemplater-image-module": "^3.0.2",
     "dotenv": "^4.0.0",
+    "image-size": "^0.5.1",
     "jszip": "^2.6.1",
     "request": "^2.79.0",
     "request-promise": "^4.1.1"

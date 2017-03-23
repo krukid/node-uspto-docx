@@ -1,13 +1,21 @@
-import { rqSearch } from './request';
+import { RpSearch } from './request';
 
-function pathForLogout() {
+/**
+ *
+ */
+
+function urlForLogout() {
   return `http://${process.env.SEARCH}/bin/gate.exe`;
 }
 
+/**
+ *
+ */
+
 async function visitLogoutPage({jar, state}) {
-  const logoutBody = await rqSearch({
+  const logoutBody = await RpSearch({
     jar,
-    uri: pathForLogout(),
+    uri: urlForLogout(),
     qs: {
       'state': state,
       'f': 'logout',
@@ -17,23 +25,21 @@ async function visitLogoutPage({jar, state}) {
   return logoutBody;
 }
 
-export default function sessionDestroy(session, {silent}) {
-  return new Promise(async function(resolve, reject) {
-    const t0 = new Date();
-    let sessionError = null;
-    try {
-      console.log('*** GETTING LOGOUT PAGE');
-      const logoutBody = await visitLogoutPage(session);
-      console.log('* GOT BODY', logoutBody, new Date() - t0);
+/**
+ *
+ */
 
-    } catch(error) {
-      sessionError = error;
-    }
+export default async function sessionDestroy(session, {silent}) {
+  const t0 = new Date();
+  try {
+    console.log('*** GETTING LOGOUT PAGE');
+    const logoutBody = await visitLogoutPage(session);
+    console.log('* GOT LOGOUT BODY', new Date() - t0);
+    // console.log(logoutBody); // debug
 
-    if (sessionError === null || silent) {
-      resolve();
-    } else {
-      reject(sessionError);
+  } catch(error) {
+    if (!silent) {
+      throw error;
     }
-  });
+  }
 }
