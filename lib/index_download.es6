@@ -59,7 +59,7 @@ function setIndexState(searchCode, phaseState, pageIndex, hasNextPage) {
     phaseState.pageCount = pageIndex;
     phaseState.completed = true;
   }
-  phaseState.pageIndex = pageIndex += 1;
+  phaseState.pageIndex = pageIndex + 1;
   savePhaseState(searchCode, 'index', phaseState);
 }
 

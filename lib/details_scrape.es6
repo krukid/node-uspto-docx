@@ -53,11 +53,12 @@ function _text($node) {
  *
  */
 
+// TODO force output/images directory
 export default async function scrapeDetails(serialNumber) {
   let scrapeResult = null;
   const t0 = new Date();
   try {
-    const logoPath = Path.resolve(APP_ROOT, 'output', `${serialNumber}-logo`);
+    const logoPath = `${APP_ROOT}/output/images/${serialNumber}-logo`;
 
     const detailPromise = Rp({
       uri: urlForDetails(serialNumber),
@@ -71,6 +72,7 @@ export default async function scrapeDetails(serialNumber) {
         filingDate: _text($filingDate($body)),
         regNumber: _text($regNumber($body)),
         regDate: _text($regDate($body)),
+        // TODO isUS
       };
       console.log('* GOT DETAILS', scrapedDetails); // debug
       return scrapedDetails;
