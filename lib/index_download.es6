@@ -3,7 +3,8 @@ import Cheerio from 'cheerio';
 import sessionCreate from './session_create';
 import sessionDestroy from './session_destroy';
 import { RpSearch } from './request';
-import { initRunState, setRunState, writeFilePathSync } from './file';
+import { writeFilePathSync } from './file';
+import { initPhaseState, savePhaseState } from './run_state';
 import timeout from './timeout';
 
 
@@ -19,7 +20,7 @@ function urlForIndex() {
  *
  */
 
-function extractState($) {
+function extractSID($) {
   const href = $('a[href^="/bin/gate.exe?f=search&state="]').attr('href');
   return Url.parse(href, true).query.state;
 }
@@ -28,14 +29,14 @@ function extractState($) {
  *
  */
 
-async function visitIndexPage({jar}, indexState, pageNum, perPage) {
-  const modifiedState = indexState.replace(/\d+$/, (pageNum - 1) * perPage + 1);
+async function visitIndexPage({jar}, indexSID, pageNum, perPage) {
+  const modifiedSID = indexSID.replace(/\d+$/, (pageNum - 1) * perPage + 1);
   const indexBody = RpSearch({
     jar,
     uri: urlForIndex(),
     qs: {
       'f': 'toc',
-      'state': modifiedState,
+      'state': modifiedSID,
     },
   });
   return indexBody;
@@ -45,26 +46,45 @@ async function visitIndexPage({jar}, indexState, pageNum, perPage) {
  *
  */
 
-export default async function sessionTest(searchCode, startPage, perPage) {
-  const t0 = new Date();
-  const runState = initRunState(searchCode, {startPage, perPage});
+function initIndexState(searchCode, args) {
+  const phaseState = initPhaseState(searchCode, 'index', args);
+  if (phaseState.completed) {
+    throw new Error(`Index operation marked as completed for code: ${searchCode}`);
+  }
+  return phaseState;
+}
+
+function setIndexState(searchCode, phaseState, pageIndex, hasNextPage) {
+  if (!hasNextPage) {
+    phaseState.pageCount = pageIndex;
+    phaseState.completed = true;
+  }
+  phaseState.pageIndex = pageIndex += 1;
+  savePhaseState(searchCode, 'index', phaseState);
+}
+
+/**
+ *
+ */
+
+export default async function sessionTest(searchCode, args) {
+  // const t0 = new Date();
+  const phaseState = initIndexState(searchCode, args);
   let session = null;
   try {
+    const { perPage } = phaseState;
     session = await sessionCreate(searchCode, perPage);
-    // writeFilePathSync(`${APP_ROOT}/output/${searchCode}/0.html`, session.initBody); // debug
     const $initBody = Cheerio.load(session.initBody);
-    const indexState = extractState($initBody);
-    let pageSize = runState[searchCode].perPage;
-    let pageIndex = runState[searchCode].startPage;
+    const indexSID = extractSID($initBody);
     let hasNextPage = false;
     do {
-      const indexBody = await visitIndexPage(session, indexState, pageIndex, pageSize);
+      const { pageIndex } = phaseState;
+      const indexBody = await visitIndexPage(session, indexSID, pageIndex, perPage);
       const $indexBody = Cheerio.load(indexBody);
       hasNextPage = $indexBody('img[alt="next TOC list"]').parent().is('a[href]');
       writeFilePathSync(`${APP_ROOT}/output/${searchCode}/page${pageIndex}.html`, indexBody);
       console.log('* SAVED PAGE', pageIndex, '; Continue:', hasNextPage); // debug
-      runState[searchCode].startPage = pageIndex += 1;
-      setRunState(runState);
+      setIndexState(searchCode, phaseState, pageIndex, hasNextPage);
       console.log('* SLEEPING...');
       await timeout(10000);
     } while (hasNextPage);
@@ -73,6 +93,6 @@ export default async function sessionTest(searchCode, startPage, perPage) {
     if (session) {
       await sessionDestroy(session, {silent: true});
     }
-    console.log('======== TOTAL TIME', new Date() - t0); // debug
+    // console.log('======== TOTAL TIME', new Date() - t0); // debug
   }
 }

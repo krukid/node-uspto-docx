@@ -8,11 +8,13 @@ import detailsGenerate from './lib/details_generate';
 // require('./lib/document.js');
 
 async function workflow() {
-  // await indexDownload('201204$[RD]', 1, 500);
+  await indexDownload('201204$[RD]', {pageIndex: 1, perPage: 500});
   // await detailsDownload('201204$[RD]');
-  detailsGenerate();
+  // detailsGenerate();
 }
 
 workflow().then(function() {
   console.log('All operations completed.');
+}).catch(function(error) {
+  console.error(error);
 });
