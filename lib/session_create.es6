@@ -1,6 +1,6 @@
 import Url from 'url';
 import Cheerio from 'cheerio';
-import { RpSearch, setCookie } from './request';
+import { RpSearch, setCookie } from './util/request';
 
 /**
  *
@@ -40,22 +40,17 @@ function extractState(searchUrl) {
 
 async function visitSessionPage(jar) {
   const sessionUrl = urlForSession();
-  const sessionBody = await RpSearch({
+  return await RpSearch({
     jar,
     uri: sessionUrl,
   });
-  // console.log(jar.getCookies(sessionUrl)); // debug
-  return sessionBody;
 }
 
 async function visitFormPage(jar, formUrl) {
-  const formBody = await RpSearch({
+  return await RpSearch({
     jar,
     uri: formUrl,
   });
-  // console.log(formBody);
-  // console.log(jar.getCookies(formUrl)); // debug
-  return formBody;
 }
 
 async function postInitPage(jar, state, searchCode, perPage) {
@@ -80,7 +75,6 @@ async function postInitPage(jar, state, searchCode, perPage) {
       'Cache-Control': 'max-age=0'
     },
   });
-  // console.log(jar.getCookies(initUrl)); // debug
   return initBody;
 }
 
@@ -89,24 +83,23 @@ async function postInitPage(jar, state, searchCode, perPage) {
  */
 
 export default async function sessionCreate(searchCode, perPage) {
-  const t0 = new Date();
+  const t0 = new Date(); // @stats
   const jar = RpSearch.jar();
 
-  console.log("*** CREATING SESSION");
+  console.log("*** CREATING SESSION"); // @log
   const sessionBody = await visitSessionPage(jar);
   const $session = Cheerio.load(sessionBody);
   const formUrl = urlForSearchForm($searchLink($session).attr('href'));
-  console.log('* GOT SEARCH URL', formUrl, new Date() - t0);
+  console.log('* GOT SEARCH URL', formUrl, new Date() - t0);  // @log @stats
   const state = extractState(formUrl);
 
-  console.log('*** GETTING SEARCH FORM');
+  console.log('*** GETTING SEARCH FORM');  // @log
   const formBody = await visitFormPage(jar, formUrl);
-  console.log('* GOT SEARCH FORM', new Date() - t0);
+  console.log('* GOT SEARCH FORM', new Date() - t0);  // @log @stats
 
-  console.log('*** POSTING SEARCH FORM');
+  console.log('*** POSTING SEARCH FORM');  // @log
   const initBody = await postInitPage(jar, state, searchCode, perPage);
-  console.log('* POSTED SEARCH', new Date() - t0);
-  // console.log(initBody); // debug
+  console.log('* POSTED SEARCH', new Date() - t0);  // @log @stats
 
   return {state, jar, initBody};
 }

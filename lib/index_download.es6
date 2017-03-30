@@ -1,12 +1,13 @@
+import Fs from 'fs';
 import Url from 'url';
 import Cheerio from 'cheerio';
+import { RpSearch } from './util/request';
+import { writeFilePathSync } from './util/file';
+import { initPhaseState, savePhaseState } from './util/run_state';
+import timeout from './util/timeout';
+import { pathForIndexFile } from './util/path_helper';
 import sessionCreate from './session_create';
 import sessionDestroy from './session_destroy';
-import { RpSearch } from './request';
-import { writeFilePathSync } from './file';
-import { initPhaseState, savePhaseState } from './run_state';
-import timeout from './timeout';
-
 
 /**
  *
@@ -31,7 +32,7 @@ function extractSID($) {
 
 async function visitIndexPage({jar}, indexSID, pageNum, perPage) {
   const modifiedSID = indexSID.replace(/\d+$/, (pageNum - 1) * perPage + 1);
-  const indexBody = RpSearch({
+  return RpSearch({
     jar,
     uri: urlForIndex(),
     qs: {
@@ -39,7 +40,6 @@ async function visitIndexPage({jar}, indexSID, pageNum, perPage) {
       'state': modifiedSID,
     },
   });
-  return indexBody;
 }
 
 /**
@@ -48,18 +48,17 @@ async function visitIndexPage({jar}, indexSID, pageNum, perPage) {
 
 function initIndexState(searchCode, args) {
   const phaseState = initPhaseState(searchCode, 'index', args);
-  if (phaseState.completed) {
-    throw new Error(`Index operation marked as completed for code: ${searchCode}`);
-  }
+  // if (phaseState.completed) {
+  //   throw new Error(`Index operation marked as completed for code: ${searchCode}`);
+  // }
   return phaseState;
 }
 
-function setIndexState(searchCode, phaseState, pageIndex, hasNextPage) {
+function setIndexState(searchCode, phaseState, hasNextPage) {
   if (!hasNextPage) {
     phaseState.pageCount = pageIndex;
     phaseState.completed = true;
   }
-  phaseState.pageIndex = pageIndex + 1;
   savePhaseState(searchCode, 'index', phaseState);
 }
 
@@ -68,10 +67,14 @@ function setIndexState(searchCode, phaseState, pageIndex, hasNextPage) {
  */
 
 export default async function sessionTest(searchCode, args) {
-  // const t0 = new Date();
-  const phaseState = initIndexState(searchCode, args);
+  // const t0 = new Date(); // @stats
   let session = null;
   try {
+    const phaseState = initIndexState(searchCode, args);
+    if (phaseState.completed) {
+      console.log(`[WARN] Index operation marked as completed for code: ${searchCode}`); // @log
+      return ;
+    }
     const { perPage } = phaseState;
     session = await sessionCreate(searchCode, perPage);
     const $initBody = Cheerio.load(session.initBody);
@@ -81,11 +84,13 @@ export default async function sessionTest(searchCode, args) {
       const { pageIndex } = phaseState;
       const indexBody = await visitIndexPage(session, indexSID, pageIndex, perPage);
       const $indexBody = Cheerio.load(indexBody);
+      const indexPath = pathForIndexFile({ searchCode, pageIndex });
       hasNextPage = $indexBody('img[alt="next TOC list"]').parent().is('a[href]');
-      writeFilePathSync(`${APP_ROOT}/output/${searchCode}/page${pageIndex}.html`, indexBody);
-      console.log('* SAVED PAGE', pageIndex, '; Continue:', hasNextPage); // debug
-      setIndexState(searchCode, phaseState, pageIndex, hasNextPage);
-      console.log('* SLEEPING...');
+      Fs.writeFileSync(indexPath, indexBody);
+      console.log('* SAVED PAGE', pageIndex, '; Continue:', hasNextPage); // @log
+      phaseState.pageIndex += 1;
+      setIndexState(searchCode, phaseState, hasNextPage);
+      console.log('* SLEEPING...'); // @log
       await timeout(10000);
     } while (hasNextPage);
 
@@ -93,6 +98,6 @@ export default async function sessionTest(searchCode, args) {
     if (session) {
       await sessionDestroy(session, {silent: true});
     }
-    // console.log('======== TOTAL TIME', new Date() - t0); // debug
+    // console.log('======== TOTAL TIME', new Date() - t0); // @stats
   }
 }

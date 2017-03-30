@@ -5,8 +5,8 @@ import Path from 'path';
  *
  */
 
-export function writeFilePathSync(path, body) {
-  const absDir = Path.resolve(Path.dirname(path));
+export function forceDirectorySync(dirPath) {
+  const absDir = Path.resolve(dirPath);
   absDir.split(Path.sep).reduce(function(a, b) {
     const dir = `${a}${Path.sep}${b}`;
     if (!Fs.existsSync(dir)) {
@@ -14,5 +14,9 @@ export function writeFilePathSync(path, body) {
     }
     return dir;
   });
+}
+
+export function writeFilePathSync(path, body) {
+  forceDirectorySync(Path.dirname(path));
   Fs.writeFileSync(path, body);
 }

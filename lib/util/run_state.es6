@@ -1,13 +1,5 @@
 import Fs from 'fs';
-// import Path from 'path';
-
-/**
- *
- */
-
-function pathForRunState() {
-  return `${APP_ROOT}/output/run.json`;
-}
+import { pathForStateFile } from './path_helper';
 
 /**
  *
@@ -16,7 +8,7 @@ function pathForRunState() {
 let _runState = null;
 
 function getRunState() {
-  const file = pathForRunState();
+  const file = pathForStateFile();
   let runState = {};
   if (Fs.existsSync(file)) {
     runState = JSON.parse(Fs.readFileSync(file));
@@ -49,6 +41,6 @@ export function initPhaseState(searchCode, phaseName, args) {
 export function savePhaseState(searchCode, phaseName, phaseState) {
   const runState = getRunStateLazy();
   runState[searchCode][phaseName] = phaseState;
-  const file = pathForRunState();
+  const file = pathForStateFile();
   Fs.writeFileSync(file, JSON.stringify(runState));
 }

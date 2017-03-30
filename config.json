@@ -1,0 +1,28 @@
+{
+  "queries": [
+    {
+      "searchCode": "201204$[RD]",
+      "templateNames": {
+        "default": "I.docx",
+        "us": "A.docx",
+        "addYear": 5
+      }
+    },
+    {
+      "searchCode": "201402$[RD]",
+      "templateNames": {
+        "default": "J.docx",
+        "us": "B.docx",
+        "addYear": 9
+      }
+    },
+    {
+      "searchCode": "201001$[RD]",
+      "templateNames": {
+        "default": "U.docx",
+        "us": "C.docx",
+        "addYear": 15
+      }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { RpSearch } from './request';
+import { RpSearch } from './util/request';
 
 /**
  *
@@ -13,7 +13,7 @@ function urlForLogout() {
  */
 
 async function visitLogoutPage({jar, state}) {
-  const logoutBody = await RpSearch({
+  return await RpSearch({
     jar,
     uri: urlForLogout(),
     qs: {
@@ -22,7 +22,6 @@ async function visitLogoutPage({jar, state}) {
       'a_logout': 'Logout',
     },
   });
-  return logoutBody;
 }
 
 /**
@@ -30,12 +29,11 @@ async function visitLogoutPage({jar, state}) {
  */
 
 export default async function sessionDestroy(session, {silent}) {
-  const t0 = new Date();
+  const t0 = new Date(); // @ stats
   try {
-    console.log('*** GETTING LOGOUT PAGE');
+    console.log('*** GETTING LOGOUT PAGE'); // @log
     const logoutBody = await visitLogoutPage(session);
-    console.log('* GOT LOGOUT BODY', new Date() - t0);
-    // console.log(logoutBody); // debug
+    console.log('* GOT LOGOUT BODY', new Date() - t0); // @log @stats
 
   } catch(error) {
     if (!silent) {

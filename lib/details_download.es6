@@ -1,62 +1,59 @@
 import Fs from 'fs';
-import Cheerio from 'cheerio';
-import detailsScrape from './details_scrape';
-import timeout from './timeout';
-import { initPhaseState, savePhaseState } from './run_state';
-import { writeFilePathSync } from './file';
+import Rp from 'request-promise';
+import { rqLogo } from './util/request';
+import { urlForDetails, urlForLogo } from './util/url_helper';
+import detailsScrapeSync from './details_scrape_sync';
 
 /**
  *
  */
 
-function initDetailsState(searchCode, args) {
-  const phaseState = initPhaseState(searchCode, 'details', args);
-  if (phaseState.completed) {
-    throw new Error(`Details operation marked as completed for code: ${searchCode}`);
+async function cachedDetailsDownload(setialNumber, {rawDetailsPath}) {
+  let detailsBody;
+  if (Fs.existsSync(rawDetailsPath)) {
+    detailsBody = await Fs.readFile(rawDetailsPath);
+
+  } else {
+    detailsBody = await Rp({
+      url: urlForDetails(serialNumber)
+    });
+    Fs.writeFileSync(rawDetailsPath, detailsBody);
   }
-  return phaseState;
+  return detailsBody;
 }
 
-function saveDetailsState(searchCode, phaseState, pageIndex, hasNextPage) {
-  if (!hasNextPage) {
-    phaseState.pageCount = pageIndex;
-    phaseState.completed = true;
+async function logoDownload(serialNumber, logoPath) {
+  const isDownloaded = await Fs.exists(logoPath);
+  if (!isDownloaded) {
+    await new Promise(function(resolve, reject) {
+      rqLogo(urlForLogo(serialNumber))
+        .on('error', reject)
+        .on('end', resolve)
+        .pipe(Fs.createWriteStream(logoPath));
+    });
   }
-  phaseState.pageIndex = pageIndex + 1;
-  savePhaseState(searchCode, 'details', phaseState);
 }
 
 /**
- *
+ * Downloads and scrapes details for given `serialNumber` with logo,
+ * according to `paths`. Scrapes cached details HTML if available.
  */
 
-async function detailsChunkDownload(searchCode, { pageIndex }) {
-  const body = Fs.readFileSync(`${APP_ROOT}/output/${searchCode}/page${pageIndex}.html`);
-  const $anchors = Cheerio.load(body)('a[href^="/bin/gate.exe?f=doc&state="]');
-  for (let i = 0; i < $anchors.length; i += 4) {
-    const serialNumber = $anchors.eq(i).text();
-    const detailPath = `${APP_ROOT}/output/details/${serialNumber}.json`;
-    if (!Fs.existsSync(detailPath)) {
-      const details = await detailsScrape(serialNumber);
-      writeFilePathSync(detailPath, JSON.stringify(details));
-      console.log('* SAVED DETAILS FOR SN', serialNumber);
-      await timeout(3000);
+export default async function detailsDownload(serialNumber, paths) {
+  const t0 = new Date(); // @stats
+  try {
+    const detailsBody = await cachedDetailsDownload(serialNumber);
+
+    const details = detailsScrapeSync(serialNumber, detailsBody, paths);
+    Fs.writeFileSync(paths.detailsPath, JSON.stringify(details));
+
+    if (details.logoPath) {
+      await logoDownload(serialNumber, details.logoPath);
     }
-  }
-}
 
-// TODO error handling
-// TODO pathFor helpers
-export default async function detailsDownload(searchCode, args) {
-  const phaseState = initDetailsState(searchCode, args);
-  const files = Fs.readdirSync(`${APP_ROOT}/output/${searchCode}`);
-  const pageCount = files.length;
-  do {
-    const { pageIndex } = phaseState;
-    await detailsChunkDownload(searchCode, { pageIndex });
-    const hasNextPage = pageIndex + 1 < pageCount;
-    saveDetailsState(searchCode, phaseState, pageIndex, hasNextPage);
-    console.log('* EXTRACTED DETAILS FROM PAGE:', pageIndex);
-    // await timeout(3000);
-  } while (hasNextPage);
+    console.log('* SAVED DETAILS FOR SN', serialNumber); // @log
+
+  } finally {
+    console.log(new Date() - t0, 'ms'); // @stats
+  }
 }
