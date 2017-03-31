@@ -35,6 +35,7 @@ async function detailsDownloadForPage(searchCode, { pageIndex }) {
     const paths = pathsForDetails({ searchCode, serialNumber });
     if (!Fs.existsSync(paths.detailsPath)) {
       await detailsDownload(serialNumber, paths);
+      // TODO remove delay when generated from cache
       await timeout(3000);
     }
   }
@@ -54,10 +55,11 @@ export default async function indexDetailsDownload(searchCode, args) {
   const detailsDir = pathForIndexDir({ searchCode });
   const files = Fs.readdirSync(detailsDir);
   const pageCount = files.length;
+  let hasNextPage = false;
   do {
     const { pageIndex } = phaseState;
     await detailsDownloadForPage(searchCode, { pageIndex });
-    const hasNextPage = pageIndex + 1 < pageCount;
+    hasNextPage = pageIndex + 1 < pageCount;
     phaseState.pageIndex = pageIndex + 1;
     saveDetailsState(searchCode, phaseState, pageIndex, hasNextPage);
     console.log('* EXTRACTED DETAILS FROM PAGE:', pageIndex); // @log

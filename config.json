@@ -3,25 +3,25 @@
     {
       "searchCode": "201204$[RD]",
       "templateNames": {
-        "default": "I.docx",
-        "us": "A.docx",
+        "default": "templateA.docx",
+        "us": "templateI.docx",
         "addYear": 5
       }
     },
     {
       "searchCode": "201402$[RD]",
       "templateNames": {
-        "default": "J.docx",
-        "us": "B.docx",
+        "default": "templateJ.docx",
+        "us": "templateB.docx",
         "addYear": 9
       }
     },
     {
       "searchCode": "201001$[RD]",
       "templateNames": {
-        "default": "U.docx",
-        "us": "C.docx",
-        "addYear": 15
+        "default": "templateU.docx",
+        "us": "templateC.docx",
+        "addYear": 19
       }
     }
   ]

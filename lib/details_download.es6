@@ -8,10 +8,10 @@ import detailsScrapeSync from './details_scrape_sync';
  *
  */
 
-async function cachedDetailsDownload(setialNumber, {rawDetailsPath}) {
+async function cachedDetailsDownload(serialNumber, {rawDetailsPath}) {
   let detailsBody;
   if (Fs.existsSync(rawDetailsPath)) {
-    detailsBody = await Fs.readFile(rawDetailsPath);
+    detailsBody = Fs.readFileSync(rawDetailsPath);
 
   } else {
     detailsBody = await Rp({
@@ -42,7 +42,7 @@ async function logoDownload(serialNumber, logoPath) {
 export default async function detailsDownload(serialNumber, paths) {
   const t0 = new Date(); // @stats
   try {
-    const detailsBody = await cachedDetailsDownload(serialNumber);
+    const detailsBody = await cachedDetailsDownload(serialNumber, paths);
 
     const details = detailsScrapeSync(serialNumber, detailsBody, paths);
     Fs.writeFileSync(paths.detailsPath, JSON.stringify(details));

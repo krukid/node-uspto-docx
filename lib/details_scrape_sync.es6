@@ -1,6 +1,6 @@
 import Fs from 'fs';
 import Cheerio from 'cheerio';
-import moment from 'moment';
+import Moment from 'moment';
 import { pathForRawDetailsFile } from './util/path_helper';
 
 /**
@@ -43,6 +43,8 @@ const FIELDS = {
     key: 'US Serial Number',
   },
 };
+
+const DATE_FORMAT = 'MMM. DD, YYYY';
 
 /**
  *
@@ -127,8 +129,10 @@ function setOwnerAddress(pairs, $body, paths) {
 
 function setDateInLocation(pairs, $body, paths) {
   if (pairs.regDate) {
-    const fmt = 'MMM. DD, YYYY';
-    pairs.dateInLocation = moment(pairs.regDate, fmt).add(5, 'y').format(fmt);
+    pairs.dateInLocation =
+      Moment(pairs.regDate, DATE_FORMAT)
+        .add(5, 'y')
+        .format(DATE_FORMAT);
   }
 }
 
@@ -145,6 +149,9 @@ function setFormPath(pairs, $body, paths) {
     pairs.formPath = paths.formPathINTL;
   }
 }
+
+// TODO renewalDat = Jan 21, 2017 (XXX)
+// TODO classCount = intClasses.length
 
  /**
   *
