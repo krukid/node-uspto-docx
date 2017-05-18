@@ -6,6 +6,7 @@ import { writeFilePathSync } from './util/file';
 import { initPhaseState, savePhaseState } from './util/run_state';
 import timeout from './util/timeout';
 import { pathForIndexFile } from './util/path_helper';
+import { tracked } from './util/compose';
 import sessionCreate from './session_create';
 import sessionDestroy from './session_destroy';
 
@@ -66,7 +67,7 @@ function setIndexState(searchCode, phaseState, hasNextPage) {
  *
  */
 
-export default async function sessionTest(searchCode, args) {
+async function indexDownload(searchCode, args) {
   // const t0 = new Date(); // @stats
   let session = null;
   try {
@@ -101,3 +102,7 @@ export default async function sessionTest(searchCode, args) {
     // console.log('======== TOTAL TIME', new Date() - t0); // @stats
   }
 }
+
+export default tracked(indexDownload, {
+  name: `bulk index downloader for code %0`,
+});

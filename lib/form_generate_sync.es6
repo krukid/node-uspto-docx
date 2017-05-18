@@ -1,5 +1,6 @@
 import Fs from 'fs';
 import Path from 'path';
+import Moment from 'moment';
 import JSZip from 'jszip';
 import Docxtemplater from 'docxtemplater';
 import ImageModule from 'docxtemplater-image-module';
@@ -7,7 +8,7 @@ import sizeOf from 'image-size';
 import { pathForTemplateFile } from './util/path_helper';
 
 /**
- * 
+ *
  */
 
 function getImage(tagValue, tagName) {
@@ -24,7 +25,7 @@ function getSize(img, tagValue, tagName) {
 }
 
 /**
- * 
+ *
  */
 
 function loadDoc(templatePath) {
@@ -40,23 +41,49 @@ function loadDoc(templatePath) {
 }
 
 /**
- * 
+ *
  */
 
+/* <<to put line breaks>>
+pre = '<w:p><w:r><w:t>';
+post = '</w:t></w:r></w:p>';
+lineBreak = '<w:br/>';
+text = pre + 'testing line 1' + lineBreak + 'testing line 2' + post;
+data = {text : text}
+docx.setData(data)
+then in your template, just put {@text} instead of the usual {text}
+*/
+
+const DATE_FORMAT = 'MMM. DD, YYYY';
+
+function addYearsString(dateStr, years) {
+  if (!dateStr) return null;
+  return Moment(dateStr, DATE_FORMAT)
+    .add(years, 'y')
+    .format(DATE_FORMAT);
+}
+
+function addLineBreaks(paragraph) {
+  return `<w:p><w:r><w:t>${paragraph.join('<w:br/>')}</w:t></w:r></w:p>`;
+  // then in your template, just put {@text} instead of the usual {text}
+}
+
 // XXX pass 1:1 to template? if no time-sensitive info...
-function prepareFormData(details, templateNames) {
+function prepareFormData(details, options) {
+  // TODO warn if ownerAddress too long/too many paragraphs
+  // TODO warn if ownerName, TM, intClasses too long
   return {
-    ownerName: details.ownerName, // XXX can be multiline - don't wrap?
-    ownerAddress: details.ownerAddress, // FIXME does not wrap :( 3 lines in template, if more then append to 3rd
+    ownerName: details.ownerName,
+    ownerAddress: addLineBreaks(details.ownerAddress),
     tradeMark: details.tradeMark,
     regNumber: details.regNumber,
     classCount: details.intClasses.length,
-    renewalDate: details.regDate, // TODO add template.addYears
+    renewalDate: addYearsString(details.regDate, options.addYears),
     markType: details.markType.join(', '), // XXX handle empty list
     register: details.register.join(', '), // XXX debug when multiple; XXX handle empty list
     filingDate: details.filingDate,
     intClasses: details.intClasses.join(', '), // XXX debug when multiple; XXX handle empty list
-    dateInLocation: details.regDate, // XXX take from dateInLocation field instead? not as described...
+    dateInLocation: details.regDate, // XXX dateInLocation exists in details - use?
     regDate: details.regDate,
     serialNumber: details.serialNumber,
     logoPath: details.logoPath, // XXX max width & preserve ratio? debug large images
@@ -64,16 +91,16 @@ function prepareFormData(details, templateNames) {
 }
 
 /**
- * 
+ *
  */
 
-export default function formGenerateSync(details, templateNames) {
+export default function formGenerateSync(details, options) {
   const t0 = new Date(); // @stats
 
-  const templateName = templateNames.default; // TODO default/us based on details.isUSA
+  const templateName = options.template;
   const templatePath = pathForTemplateFile({templateName});
   const doc = loadDoc(templatePath);
-  const data = prepareFormData(details, templateNames);
+  const data = prepareFormData(details, options);
   doc.setData(data);
 
   try {
@@ -90,7 +117,7 @@ export default function formGenerateSync(details, templateNames) {
     throw error;
   }
 
-  const outputBuf = doc.getZip().generate({type: 'nodebuffer'});
+  const outputBuf = doc.getZip().generate({type: 'nodebuffer', compression: 'DEFLATE'});
   Fs.writeFileSync(details.formPath, outputBuf);
 
   console.log('* GENERATED FORM', details.serialNumber, new Date() - t0); // @log @stats

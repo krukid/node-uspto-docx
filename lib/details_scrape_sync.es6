@@ -1,6 +1,5 @@
 import Fs from 'fs';
 import Cheerio from 'cheerio';
-import Moment from 'moment';
 import { pathForRawDetailsFile } from './util/path_helper';
 
 /**
@@ -43,8 +42,6 @@ const FIELDS = {
     key: 'US Serial Number',
   },
 };
-
-const DATE_FORMAT = 'MMM. DD, YYYY';
 
 /**
  *
@@ -127,15 +124,6 @@ function setOwnerAddress(pairs, $body, paths) {
   }
 }
 
-function setDateInLocation(pairs, $body, paths) {
-  if (pairs.regDate) {
-    pairs.dateInLocation =
-      Moment(pairs.regDate, DATE_FORMAT)
-        .add(5, 'y')
-        .format(DATE_FORMAT);
-  }
-}
-
 function setLogoPath(pairs, $body, paths) {
   if ($body('#markImage') && pairs.serialNumber) {
     pairs.logoPath = paths.logoPath;
@@ -161,7 +149,7 @@ export default function detailsScrapeSync(serialNumber, detailsBody, paths) {
   const $body = Cheerio.load(detailsBody);
   const pairs = extractPairs({}, $body);
   setOwnerAddress(pairs, $body, paths);
-  setDateInLocation(pairs, $body, paths);
+  // setDateInLocation(pairs, $body, paths);
   setLogoPath(pairs, $body, paths);
   setFormPath(pairs, $body, paths);
   debugPairs(pairs); // @debug

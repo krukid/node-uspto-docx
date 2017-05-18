@@ -3,6 +3,7 @@ import Cheerio from 'cheerio';
 import timeout from './util/timeout';
 import { initPhaseState, savePhaseState } from './util/run_state';
 import { pathForIndexDir, pathForIndexFile, pathsForDetails } from './util/path_helper';
+import { tracked } from './util/compose';
 import detailsDownload from './details_download';
 
 /**
@@ -34,9 +35,10 @@ async function detailsDownloadForPage(searchCode, { pageIndex }) {
     const serialNumber = $anchors.eq(i).text();
     const paths = pathsForDetails({ searchCode, serialNumber });
     if (!Fs.existsSync(paths.detailsPath)) {
-      await detailsDownload(serialNumber, paths);
-      // TODO remove delay when generated from cache
-      await timeout(3000);
+      const isWithoutNetwork = await detailsDownload(serialNumber, paths);
+      if (!isWithoutNetwork) {
+        await timeout(3000);
+      }
     }
   }
 }
@@ -46,7 +48,7 @@ async function detailsDownloadForPage(searchCode, { pageIndex }) {
  * Saves state after page completion.
  */
 
-export default async function indexDetailsDownload(searchCode, args) {
+async function indexDetailsDownload(searchCode, args) {
   const phaseState = initDetailsState(searchCode, args);
   if (phaseState.completed) {
     console.log(`[WARN] Details operation marked as completed for code: ${searchCode}`); // @log
@@ -65,3 +67,7 @@ export default async function indexDetailsDownload(searchCode, args) {
     console.log('* EXTRACTED DETAILS FROM PAGE:', pageIndex); // @log
   } while (hasNextPage);
 }
+
+export default tracked(indexDetailsDownload, {
+  name: `bulk details downloader for code %0`,
+});

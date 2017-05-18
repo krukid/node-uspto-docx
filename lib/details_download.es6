@@ -8,9 +8,9 @@ import detailsScrapeSync from './details_scrape_sync';
  *
  */
 
-async function cachedDetailsDownload(serialNumber, {rawDetailsPath}) {
+async function cachedDetailsDownload(serialNumber, rawDetailsPath, isCached) {
   let detailsBody;
-  if (Fs.existsSync(rawDetailsPath)) {
+  if (isCached) {
     detailsBody = Fs.readFileSync(rawDetailsPath);
 
   } else {
@@ -22,9 +22,8 @@ async function cachedDetailsDownload(serialNumber, {rawDetailsPath}) {
   return detailsBody;
 }
 
-async function logoDownload(serialNumber, logoPath) {
-  const isDownloaded = await Fs.exists(logoPath);
-  if (!isDownloaded) {
+async function cachedLogoDownload(serialNumber, logoPath, isCached) {
+  if (!isCached) {
     await new Promise(function(resolve, reject) {
       rqLogo(urlForLogo(serialNumber))
         .on('error', reject)
@@ -42,16 +41,23 @@ async function logoDownload(serialNumber, logoPath) {
 export default async function detailsDownload(serialNumber, paths) {
   const t0 = new Date(); // @stats
   try {
-    const detailsBody = await cachedDetailsDownload(serialNumber, paths);
+    let isWithoutNetwork = true;
+
+    const isDetailsCached = await Fs.exists(paths.rawDetailsPath);
+    const detailsBody = await cachedDetailsDownload(serialNumber, paths.rawDetailsPath, isDetailsCached);
+    isWithoutNetwork = isWithoutNetwork && isDetailsCached;
 
     const details = detailsScrapeSync(serialNumber, detailsBody, paths);
     Fs.writeFileSync(paths.detailsPath, JSON.stringify(details));
 
     if (details.logoPath) {
-      await logoDownload(serialNumber, details.logoPath);
+      const isLogoCached = await Fs.exists(details.logoPath);
+      await cachedLogoDownload(serialNumber, details.logoPath, isLogoCached);
+      isWithoutNetwork = isWithoutNetwork && isLogoCached;
     }
 
     console.log('* SAVED DETAILS FOR SN', serialNumber); // @log
+    return isWithoutNetwork;
 
   } finally {
     console.log(new Date() - t0, 'ms'); // @stats
