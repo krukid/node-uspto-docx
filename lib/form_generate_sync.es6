@@ -63,7 +63,7 @@ function addLineBreaks(paragraph) {
           <w:sz w:val="20"/>
           <w:color w:val="333333"/>
         </w:rPr>
-        <w:t xml:space="preserve">${paragraph.map(l => `${padding}${l}`).join('<w:br/>')}</w:t>
+        ${paragraph.map(l => `<w:t xml:space="preserve">${padding}${l}</w:t>`).join('<w:br/>')}
       </w:r>
     </w:p>
   `;

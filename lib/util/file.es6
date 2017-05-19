@@ -1,5 +1,6 @@
 import Fs from 'fs';
 import Path from 'path';
+import rimraf from 'rimraf';
 
 /**
  *
@@ -19,4 +20,8 @@ export function forceDirectorySync(dirPath) {
 export function writeFilePathSync(path, body) {
   forceDirectorySync(Path.dirname(path));
   Fs.writeFileSync(path, body);
+}
+
+export function rmrf(path, sync=false) {
+  rimraf(path, () => {}, sync);
 }

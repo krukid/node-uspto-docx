@@ -1,5 +1,6 @@
 import Fs from 'fs';
 import Rp from 'request-promise';
+import { rmrf } from './util/file';
 import { rqLogo } from './util/request';
 import { urlForDetails, urlForLogo } from './util/url_helper';
 import detailsScrapeSync from './details_scrape_sync';
@@ -58,6 +59,12 @@ export default async function detailsDownload(serialNumber, paths) {
 
     console.log('* SAVED DETAILS FOR SN', serialNumber); // @log
     return isWithoutNetwork;
+
+  } catch (error) {
+    rmrf(paths.detailsPath);
+    rmrf(paths.rawDetailsPath);
+    rmrf(paths.logoPath);
+    throw error;
 
   } finally {
     console.log(new Date() - t0, 'ms'); // @stats
