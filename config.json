@@ -2,22 +2,7 @@
   "queries": [
     {
       "searchCode": "201204$[RD]",
-      "template": "templateA.docx",
-      "addYears": 5
-    },
-    {
-      "searchCode": "201207$[RD]",
-      "template": "templateB.docx",
-      "addYears": 9
-    },
-    {
-      "searchCode": "201208$[RD]",
-      "template": "templateC.docx",
-      "addYears": 19
-    },
-    {
-      "searchCode": "201211$[RD]",
-      "template": "templateA.docx",
+      "template": "A_tmpl.docx",
       "addYears": 5
     }
   ]

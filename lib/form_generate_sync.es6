@@ -64,12 +64,25 @@ function addYearsString(dateStr, years) {
 }
 
 function addLineBreaks(paragraph) {
-  return `<w:p><w:r><w:t>${paragraph.join('<w:br/>')}</w:t></w:r></w:p>`;
+  const padding = '                 ';
+  return `
+    <w:p>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Arial" w:hAnsi="Arial"/>
+          <w:sz w:val="20"/>
+          <w:color w:val="333333"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${paragraph.map(l => `${padding}${l}`).join('<w:br/>')}</w:t>
+      </w:r>
+    </w:p>
+  `;
   // then in your template, just put {@text} instead of the usual {text}
 }
 
 // XXX pass 1:1 to template? if no time-sensitive info...
 function prepareFormData(details, options) {
+  // TODO cleanup template trailing space
   // TODO warn if ownerAddress too long/too many paragraphs
   // TODO warn if ownerName, TM, intClasses too long
   return {
@@ -86,7 +99,7 @@ function prepareFormData(details, options) {
     dateInLocation: details.regDate, // XXX dateInLocation exists in details - use?
     regDate: details.regDate,
     serialNumber: details.serialNumber,
-    logoPath: details.logoPath, // XXX max width & preserve ratio? debug large images
+    logoPath: details.logoPath, // TODO max width & preserve ratio 320x200 (also recode to JPG to save size)
   };
 }
 
