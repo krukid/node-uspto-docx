@@ -2,8 +2,8 @@
   "queries": [
     {
       "searchCode": "201204$[RD]",
-      "template": "A_tmpl.docx",
-      "addYears": 5
+      "templateName": "X_tmpl.docx",
+      "addYears": 20
     }
   ]
 }

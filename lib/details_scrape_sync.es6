@@ -138,9 +138,6 @@ function setFormPath(pairs, $body, paths) {
   }
 }
 
-// TODO renewalDat = Jan 21, 2017 (XXX)
-// TODO classCount = intClasses.length
-
  /**
   *
   */

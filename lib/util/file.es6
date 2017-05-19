@@ -22,6 +22,14 @@ export function writeFilePathSync(path, body) {
   Fs.writeFileSync(path, body);
 }
 
-export function rmrf(path, sync=false) {
-  rimraf(path, () => {}, sync);
+export function rmrf(path) {
+  return new Promise(function(resolve, reject) {
+    rimraf(path, function(err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
 }

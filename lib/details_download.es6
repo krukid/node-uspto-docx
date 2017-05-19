@@ -1,5 +1,6 @@
 import Fs from 'fs';
-import Rp from 'request-promise';
+// import Rp from 'request-promise';
+import { I18nGet } from './util/request';
 import { rmrf } from './util/file';
 import { rqLogo } from './util/request';
 import { urlForDetails, urlForLogo } from './util/url_helper';
@@ -15,9 +16,7 @@ async function cachedDetailsDownload(serialNumber, rawDetailsPath, isCached) {
     detailsBody = Fs.readFileSync(rawDetailsPath);
 
   } else {
-    detailsBody = await Rp({
-      url: urlForDetails(serialNumber)
-    });
+    detailsBody = await I18nGet(urlForDetails(serialNumber));
     Fs.writeFileSync(rawDetailsPath, detailsBody);
   }
   return detailsBody;

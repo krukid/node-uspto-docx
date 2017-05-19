@@ -72,9 +72,7 @@ function addLineBreaks(paragraph) {
 }
 
 function prepareFormData(details, options) {
-  // TODO fix utf8 chars when parsing details
   // TODO convert logos to 320x200 JPGs with same ratio
-  // TODO fix info in templates (seems like they contain errors)
   return {
     ownerName: details.ownerName,
     ownerAddress: addLineBreaks(details.ownerAddress),
@@ -82,8 +80,8 @@ function prepareFormData(details, options) {
     regNumber: details.regNumber,
     classCount: details.intClasses.length,
     renewalDate: addYearsString(details.regDate, options.addYears),
-    markType: details.markType.join(', '), // XXX handle empty list
-    register: details.register.join(', '), // XXX debug when multiple; XXX handle empty list
+    markType: details.markType.join(', '),
+    register: details.register.includes('Principal') ? 'Principal' : '',
     filingDate: details.filingDate,
     intClasses: details.intClasses.join(', '), // XXX debug when multiple; XXX handle empty list
     dateInLocation: details.regDate,
@@ -100,8 +98,9 @@ function prepareFormData(details, options) {
 export default function formGenerateSync(details, options) {
   const t0 = new Date(); // @stats
 
-  const templateName = options.template;
-  const templatePath = pathForTemplateFile({templateName});
+  const { isUSA } = details;
+  const { templateName } = options;
+  const templatePath = pathForTemplateFile({templateName, isUSA});
   const doc = loadDoc(templatePath);
   const data = prepareFormData(details, options);
   doc.setData(data);

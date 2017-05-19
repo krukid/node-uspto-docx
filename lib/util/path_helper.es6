@@ -63,8 +63,12 @@ export function pathForFormFile({ searchCode, serialNumber, isUSA }) {
   return `${pathForFormDir({ searchCode, isUSA })}/${serialNumber}.docx`
 }
 
-export function pathForTemplateFile({ templateName }) {
-  return `${APP_ROOT}/templates/${templateName}`;
+export function pathForTemplateFile({ templateName, isUSA }) {
+  if (isUSA) {
+    return `${APP_ROOT}/templates/usa.${templateName}`;
+  } else {
+    return `${APP_ROOT}/templates/intl.${templateName}`;
+  }
 }
 
 /**

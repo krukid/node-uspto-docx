@@ -11,16 +11,16 @@ async function singleForm()  {
   forceOutputDirectoriesSync(searchCode);
 
   const paths = pathsForDetails({ searchCode, serialNumber });
-  rmrf(paths.detailsPath, true);
-  rmrf(paths.rawDetailsPath, true);
-  rmrf(paths.logoPath, true);
+  await rmrf(paths.detailsPath);
+  await rmrf(paths.rawDetailsPath);
+  await rmrf(paths.logoPath);
 
   await detailsDownload(serialNumber, paths);
-  const details = JSON.parse(Fs.readFileSync(paths.detailsPath, 'utf8'));
-  rmrf(details.formPath, true);
+  const details = JSON.parse(Fs.readFileSync(paths.detailsPath));
+  await rmrf(details.formPath);
 
   formGenerateSync(details, {
-    "template": "A_tmpl.docx",
+    "templateName": "X_tmpl.docx",
     "addYears": 5
   });
 }

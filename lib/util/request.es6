@@ -1,5 +1,8 @@
 import Rq from 'request';
 import Rp from 'request-promise';
+import http from 'http';
+import iconv from 'iconv-lite';
+import charset from 'charset';
 
 export const RpSearch = Rp.defaults({
   gzip: true,
@@ -29,4 +32,22 @@ export function setCookie(jar, url, hash) {
     const cookie = Rp.cookie(cookieStr);
     jar.setCookie(cookie, url);
   })
+}
+
+export function I18nGet(url) {
+  return new Promise(function(resolve, reject) {
+    const req = http.get(url, function(res) {
+      const chunks = [];
+      res.on('data', function(chunk) {
+        chunks.push(chunk);
+      });
+      res.on('end', function() {
+        const body = Buffer.concat(chunks);
+        const metaCharset = charset(res.headers['content-type']);
+        // const bodyCharset = metaCharset || jschardet.detect(body).encoding.toLowerCase();
+        resolve(iconv.decode(body, metaCharset));
+      });
+    });
+    req.on('error', reject);
+  });
 }
