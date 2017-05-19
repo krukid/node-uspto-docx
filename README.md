@@ -30,6 +30,8 @@ First, make sure the drive the program is located on is shared with Docker (see 
 
 ## Running the program
 
+NOTE: for consistent state, run from within a container on Linux also.
+
     npm install
     npm start
 

@@ -44,16 +44,6 @@ function loadDoc(templatePath) {
  *
  */
 
-/* <<to put line breaks>>
-pre = '<w:p><w:r><w:t>';
-post = '</w:t></w:r></w:p>';
-lineBreak = '<w:br/>';
-text = pre + 'testing line 1' + lineBreak + 'testing line 2' + post;
-data = {text : text}
-docx.setData(data)
-then in your template, just put {@text} instead of the usual {text}
-*/
-
 const DATE_FORMAT = 'MMM. DD, YYYY';
 
 function addYearsString(dateStr, years) {
@@ -80,11 +70,10 @@ function addLineBreaks(paragraph) {
   // then in your template, just put {@text} instead of the usual {text}
 }
 
-// XXX pass 1:1 to template? if no time-sensitive info...
 function prepareFormData(details, options) {
-  // TODO cleanup template trailing space
-  // TODO warn if ownerAddress too long/too many paragraphs
-  // TODO warn if ownerName, TM, intClasses too long
+  // TODO fix utf8 chars when parsing details
+  // TODO convert logos to 320x200 JPGs with same ratio
+  // TODO fix info in templates (seems like they contain errors)
   return {
     ownerName: details.ownerName,
     ownerAddress: addLineBreaks(details.ownerAddress),
@@ -96,10 +85,10 @@ function prepareFormData(details, options) {
     register: details.register.join(', '), // XXX debug when multiple; XXX handle empty list
     filingDate: details.filingDate,
     intClasses: details.intClasses.join(', '), // XXX debug when multiple; XXX handle empty list
-    dateInLocation: details.regDate, // XXX dateInLocation exists in details - use?
+    dateInLocation: details.regDate,
     regDate: details.regDate,
     serialNumber: details.serialNumber,
-    logoPath: details.logoPath, // TODO max width & preserve ratio 320x200 (also recode to JPG to save size)
+    logoPath: details.logoPath,
   };
 }
 
