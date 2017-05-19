@@ -5,6 +5,7 @@ import JSZip from 'jszip';
 import Docxtemplater from 'docxtemplater';
 import ImageModule from 'docxtemplater-image-module';
 import sizeOf from 'image-size';
+import xmlescape from 'xml-escape';
 import { pathForTemplateFile } from './util/path_helper';
 
 /**
@@ -63,7 +64,7 @@ function addLineBreaks(paragraph) {
           <w:sz w:val="20"/>
           <w:color w:val="333333"/>
         </w:rPr>
-        ${paragraph.map(l => `<w:t xml:space="preserve">${padding}${l}</w:t>`).join('<w:br/>')}
+        ${paragraph.map(l => `<w:t xml:space="preserve">${padding}${xmlescape(l)}</w:t>`).join('<w:br/>')}
       </w:r>
     </w:p>
   `;
