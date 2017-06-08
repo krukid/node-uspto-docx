@@ -12,14 +12,31 @@ import { pathForTemplateFile } from './util/path_helper';
  *
  */
 
+const MAX_IMAGE_WIDTH = 320;
+const MAX_IMAGE_HEIGHT = 200;
+
 function getImage(tagValue, tagName) {
   return Fs.readFileSync(tagValue, 'binary');
+}
+
+function fitBox(width, height, maxW, maxH) {
+    let limW, limH, f;
+    if (width > height) {
+      f = height / width;
+      limW = Math.min(maxW, width);
+      limH = limW * f;
+    } else {
+      f = width / height;
+      limH = Math.min(maxH, height);
+      limW = limH * f;
+    }
+  return [limW, limH];
 }
 
 function getSize(img, tagValue, tagName) {
   try {
     const { width, height, type } = sizeOf(Buffer.from(img, 'binary'));
-    return [width, height];
+    return fitBox(width, height, MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT);
   } catch (e) {
     console.log('ERROR: Could not determine image dimensions', e);
   }
