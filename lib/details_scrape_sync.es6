@@ -77,6 +77,17 @@ function extractValue($value, {type}) {
   }
 }
 
+function storeValue(pairs, fieldName, value, {type}) {
+  switch (type) {
+    case 'class-list':
+      pairs[fieldName] = pairs[fieldName] || [];
+      pairs[fieldName].push(...value);
+      break;
+    default:
+      pairs[fieldName] = value;
+  }
+}
+
 /**
  *
  */
@@ -108,7 +119,7 @@ function extractPairs(pairs, $body) {
       const $value = $key.next('.value');
       const meta = getFieldMeta(fieldName);
       const value = extractValue($value, meta);
-      pairs[fieldName] = value;
+      storeValue(pairs, fieldName, value, meta);
     }
   });
   return pairs;

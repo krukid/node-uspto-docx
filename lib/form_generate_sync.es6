@@ -100,7 +100,7 @@ function prepareFormData(details, options) {
     markType: details.markType.join(', '),
     register: details.register.includes('Principal') ? 'Principal' : '',
     filingDate: details.filingDate,
-    intClasses: details.intClasses.join(', '), // XXX debug when multiple; XXX handle empty list
+    intClasses: details.intClasses.join(', '),
     dateInLocation: details.regDate,
     regDate: details.regDate,
     serialNumber: details.serialNumber,
