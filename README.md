@@ -1,5 +1,4 @@
 # node-uspto-docx
-# @deprecated
 
 ## Understanding program environment
 
@@ -11,6 +10,8 @@ Software recommendations and requirements:
 1. [Git](https://git-scm.com/download/win) - Recommended to sync code with Github repository via CLI
 2. [Visual Studio Code](https://code.visualstudio.com/) - Recommended as a code editor
 3. [Docker](https://download.docker.com/win/stable/InstallDocker.msi) - Required to set up a virtual environment on Windows OS
+
+If you only need to run the program without any code changes, then you only need Docker and program code. The latter can be downloaded via WWW without git client.
 
 ## Cloning the program repository
 
@@ -24,16 +25,41 @@ Note that for Windows OS it's recommended to clone via HTTPS, because we'll then
 
 ## Setting up program environment (Windows)
 
-First, make sure the drive the program is located on is shared with Docker (see Docker settings). Then, build and mount Docker container (see also: [scripts/README.md](scripts/README.md)):
+First, make sure the drive the program is located on is shared with Docker (see Docker settings). Then, build and mount Docker container (see also: [scripts/README.md](scripts/win/README.md)):
 
     scripts/build.ps1 uspto
     scripts/mount.ps1 uspto
+
+## Configuring the program
+
+You will need to create two files in application root directory before running the program:
+
+1. `.env` with appropriate environment variables
+2. `config.json` with program settings
+
+### .env file example
+
+    SEARCH=index.domain.com
+    DOMAIN=details.domain.com
+    SLACK=api.slack.com?token=...
+
+### config.json
+
+    {
+        "queries": [
+            {
+                "searchCode": "...",
+                "templateName": "X_tmpl.docx",
+                "addYears": 20
+            },
+            ...
+        ]
+    }
 
 ## Running the program
 
 NOTE: for consistent state, run from within a container on Linux also.
 
-    npm install
     npm start
 
 ## Viewing results
