@@ -30,6 +30,13 @@ export function pathForImageDir({ searchCode }) {
   return `${APP_ROOT}/output/${searchCode}/images-logo`;
 }
 
+export function pathForPDFDir({ searchCode, isUSA }) {
+  if (isUSA) {
+    return `${APP_ROOT}/output/${searchCode}/forms-pdf/usa`;
+  } else {
+    return `${APP_ROOT}/output/${searchCode}/forms-pdf/intl`;
+  }
+}
 
 export function pathForFormDir({ searchCode, isUSA }) {
   if (isUSA) {

@@ -1,4 +1,5 @@
 # node-uspto-docx
+# @deprecated
 
 ## Understanding program environment
 
@@ -25,8 +26,8 @@ Note that for Windows OS it's recommended to clone via HTTPS, because we'll then
 
 First, make sure the drive the program is located on is shared with Docker (see Docker settings). Then, build and mount Docker container (see also: [scripts/README.md](scripts/README.md)):
 
-    scripts/build.ps1
-    scripts/mount.ps1
+    scripts/build.ps1 uspto
+    scripts/mount.ps1 uspto
 
 ## Running the program
 

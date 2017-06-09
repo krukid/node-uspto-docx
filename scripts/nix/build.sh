@@ -1,1 +1,1 @@
-docker build -t uspto .
+docker build -t "$1" .

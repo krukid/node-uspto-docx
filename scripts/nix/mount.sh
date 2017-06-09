@@ -1,1 +1,1 @@
-docker run --rm -it -v "$(pwd):/app" -w /app uspto
+docker run --rm -it -v "$(pwd):/app" -w /app "$1"

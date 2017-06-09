@@ -1,1 +1,5 @@
-docker run --rm -it -v "$(pwd):/app" -w /app uspto
+Param(
+  [string]$image
+)
+
+docker run --rm -it -v "$(pwd):/app" -w /app "$image"

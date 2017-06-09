@@ -1,2 +1,5 @@
-docker build -t uspto .
+Param(
+  [string]$image
+)
 
+docker build -t "$image" .
