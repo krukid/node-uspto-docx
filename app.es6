@@ -26,4 +26,5 @@ workflow().then(function() {
   console.log('All operations completed.');
 }).catch(function(error) {
   console.error(error);
+  process.exit(1);
 });

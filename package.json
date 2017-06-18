@@ -6,7 +6,7 @@
   "repository": "krukid/node-uspto-docx",
   "private": true,
   "scripts": {
-    "start": "node -r dotenv/config index.js",
+    "start": "bash ./scripts/mounted/start.sh",
     "debug": "node -r dotenv/config debug.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
