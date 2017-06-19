@@ -1,6 +1,16 @@
 global.APP_ROOT = __dirname;
 // global.DEBUG = false;
 
+process.on('uncaughtException', (err) => {
+  console.error('[FATAL] Uncaught exception', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[FATAL] Unhandled rejection', reason);
+  process.exit(1);
+});
+
 import readConfigSync from './lib/util/read_config_sync';
 import forceOutputDirectoriesSync from './lib/util/force_output_directories_sync';
 import { promiseChain } from './lib/util/promise';

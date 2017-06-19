@@ -5,7 +5,7 @@ import Url from 'url';
 import iconv from 'iconv-lite';
 import charset from 'charset';
 
-const NET_TIMEOUT_MS = 30000;
+const NET_TIMEOUT_MS = 45000;
 
 export const RpSearch = Rp.defaults({
   timeout: NET_TIMEOUT_MS,

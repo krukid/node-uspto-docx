@@ -60,9 +60,11 @@ export default async function detailsDownload(serialNumber, paths) {
     return isWithoutNetwork;
 
   } catch (error) {
-    rmrf(paths.detailsPath);
-    rmrf(paths.rawDetailsPath);
-    rmrf(paths.logoPath);
+    await Promise.all([
+      rmrf(paths.detailsPath),
+      rmrf(paths.rawDetailsPath),
+      rmrf(paths.logoPath)
+    ]);
     throw error;
 
   } finally {
