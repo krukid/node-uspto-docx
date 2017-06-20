@@ -1,4 +1,4 @@
-import Rp from 'request-promise';
+import { rpBare } from './request';
 
 const USERNAME = 'Dumbledor';
 
@@ -8,7 +8,7 @@ export async function slackSend(text) {
     return ;
   }
   try {
-    await Rp({
+    await rpBare({
       uri: process.env.SLACK,
       method: 'POST',
       body: {

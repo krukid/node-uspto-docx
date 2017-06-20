@@ -2,17 +2,17 @@
   "queries": [
     {
       "searchCode": "201204$[RD]",
-      "templateName": "A_tmpl.docx",
+      "templateName": "A_final.docx",
       "addYears": 5
     },
     {
       "searchCode": "200808$[RD] AND LIVE[LD]",
-      "templateName": "B_tmpl.docx",
+      "templateName": "B_final.docx",
       "addYears": 10
     },
     {
       "searchCode": "199808$[RD] AND LIVE[LD]",
-      "templateName": "C_tmpl.docx",
+      "templateName": "C_final.docx",
       "addYears": 20
     }
   ]

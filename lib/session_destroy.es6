@@ -1,4 +1,4 @@
-import { RpSearch } from './util/request';
+import { rpSearch } from './util/request';
 
 /**
  *
@@ -13,7 +13,7 @@ function urlForLogout() {
  */
 
 async function visitLogoutPage({jar, state}) {
-  return await RpSearch({
+  return await rpSearch({
     jar,
     uri: urlForLogout(),
     qs: {

@@ -1,7 +1,7 @@
 import Fs from 'fs';
 import Url from 'url';
 import Cheerio from 'cheerio';
-import { RpSearch } from './util/request';
+import { rpSearch } from './util/request';
 import { writeFilePathSync } from './util/file';
 import { initPhaseState, savePhaseState } from './util/run_state';
 import timeout from './util/timeout';
@@ -33,7 +33,7 @@ function extractSID($) {
 
 async function visitIndexPage({jar}, indexSID, pageNum, perPage) {
   const modifiedSID = indexSID.replace(/\d+$/, (pageNum - 1) * perPage + 1);
-  return RpSearch({
+  return rpSearch({
     jar,
     uri: urlForIndex(),
     qs: {

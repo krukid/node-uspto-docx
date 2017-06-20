@@ -26,9 +26,10 @@ async function workflow() {
     forceOutputDirectoriesSync(searchCode);
     await indexDownload(searchCode, {pageIndex: 1, perPage: 500});
     await indexDetailsDownload(searchCode, {pageIndex: 1});
-    // NOTE can run these asynchronously, just need to handle async errors
+    // NOTE can run these asynchronously, just need to handle async errors;
+    // TODO should save to runState, otherwise retries will regen docx/pdf, which will take a long time
     await detailsGenerate(searchCode, options);
-    await pdfGenerate(searchCode);
+    // await pdfGenerate(searchCode);
   });
 }
 

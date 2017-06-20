@@ -89,7 +89,13 @@ function addLineBreaks(paragraph) {
 }
 
 function prepareFormData(details, options) {
-  // TODO convert logos to 320x200 JPGs with same ratio
+  if (!details.ownerAddress || !details.markType || !details.register || !details.intClasses || !details.regDate) {
+    console.error('!!! [WARN] Irregular details', details);
+    details.ownerAddress = details.ownerAddress || [];
+    details.markType = details.markType || [];
+    details.register = details.register || [];
+    details.intClasses = details.intClasses || [];
+  }
   return {
     ownerName: details.ownerName,
     ownerAddress: addLineBreaks(details.ownerAddress),
@@ -107,9 +113,9 @@ function prepareFormData(details, options) {
     logoPath: details.logoPath,
   };
 }
-
+ 
 /**
- *
+ * 
  */
 
 export default function formGenerateSync(details, options) {

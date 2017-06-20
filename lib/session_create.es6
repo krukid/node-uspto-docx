@@ -1,6 +1,7 @@
 import Url from 'url';
 import Cheerio from 'cheerio';
-import { RpSearch, setCookie } from './util/request';
+import Rp from 'request-promise';
+import { rpSearch, setCookie } from './util/request';
 
 /**
  *
@@ -40,14 +41,14 @@ function extractState(searchUrl) {
 
 async function visitSessionPage(jar) {
   const sessionUrl = urlForSession();
-  return await RpSearch({
+  return await rpSearch({
     jar,
     uri: sessionUrl,
   });
 }
 
 async function visitFormPage(jar, formUrl) {
-  return await RpSearch({
+  return await rpSearch({
     jar,
     uri: formUrl,
   });
@@ -56,7 +57,7 @@ async function visitFormPage(jar, formUrl) {
 async function postInitPage(jar, state, searchCode, perPage) {
   const initUrl = urlForInitSearch();
   setCookie(jar, initUrl, {queryCookie: searchCode});
-  const initBody = await RpSearch({
+  const initBody = await rpSearch({
     jar,
     method: 'POST',
     uri: initUrl,
@@ -84,7 +85,7 @@ async function postInitPage(jar, state, searchCode, perPage) {
 
 export default async function sessionCreate(searchCode, perPage) {
   const t0 = new Date(); // @stats
-  const jar = RpSearch.jar();
+  const jar = Rp.jar();
 
   console.log("*** CREATING SESSION"); // @log
   const sessionBody = await visitSessionPage(jar);

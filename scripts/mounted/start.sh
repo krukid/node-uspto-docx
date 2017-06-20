@@ -42,4 +42,4 @@ main() {
   echo "Total runs: $run_count"
 }
 
-main 2>&1 | tee ./output.log
+main 2>&1 | tee -a ./output.log

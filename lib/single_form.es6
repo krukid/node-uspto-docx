@@ -3,6 +3,7 @@ import { rmrf } from './util/file';
 import { pathsForDetails } from './util/path_helper';
 import detailsDownload from './details_download';
 import formGenerateSync from './form_generate_sync';
+import pdfGenerate from './pdf_generate';
 import forceOutputDirectoriesSync from './util/force_output_directories_sync';
 
 async function singleForm()  {
@@ -20,9 +21,11 @@ async function singleForm()  {
   await rmrf(details.formPath);
 
   formGenerateSync(details, {
-    "templateName": "X_tmpl.docx",
+    "templateName": "B_final.docx",
     "addYears": 5
   });
+
+  pdfGenerate(searchCode);
 }
 
 singleForm().then(function() {
