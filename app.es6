@@ -29,7 +29,7 @@ async function workflow() {
     // NOTE can run these asynchronously, just need to handle async errors;
     // TODO should save to runState, otherwise retries will regen docx/pdf, which will take a long time
     await detailsGenerate(searchCode, options);
-    // await pdfGenerate(searchCode);
+    await pdfGenerate(searchCode);
   });
 }
 

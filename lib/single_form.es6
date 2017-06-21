@@ -21,7 +21,7 @@ async function singleForm()  {
   await rmrf(details.formPath);
 
   formGenerateSync(details, {
-    "templateName": "B_final.docx",
+    "templateName": "C_final.docx",
     "addYears": 5
   });
 

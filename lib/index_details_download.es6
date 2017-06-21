@@ -61,7 +61,7 @@ async function indexDetailsDownload(searchCode, args) {
   do {
     const { pageIndex } = phaseState;
     await detailsDownloadForPage(searchCode, { pageIndex });
-    hasNextPage = pageIndex + 1 < pageCount;
+    hasNextPage = pageIndex + 1 <= pageCount;
     phaseState.pageIndex = pageIndex + 1;
     saveDetailsState(searchCode, phaseState, pageIndex, hasNextPage);
     console.log('* EXTRACTED DETAILS FROM PAGE:', pageIndex); // @log

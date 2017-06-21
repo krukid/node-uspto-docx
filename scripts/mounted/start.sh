@@ -42,4 +42,5 @@ main() {
   echo "Total runs: $run_count"
 }
 
+# truncate --size=0 ./output.log
 main 2>&1 | tee -a ./output.log
