@@ -12,14 +12,17 @@ const REQUESTLIKE_DEFAULTS = {
   timeout: NETTIMEOUT_CONNECT_MS
 };
 
-function abortOnTimeout(requestLike) {
-  // requestLike.on('socket', () => {
-    requestLike.setTimeout(NETTIMEOUT_READ_MS, () => {
-      // this will call terminate the request and trigger 'error' event
-      requestLike.abort();
-    });
-  // });
-  return requestLike;
+function abortOnBadStatus(request, response) {
+  if (response.statusCode !== 200) {
+    request.abort();
+  }
+}
+
+function abortOnTimeout(request) {
+  request.setTimeout(NETTIMEOUT_READ_MS, () => {
+    // this will call terminate the request and trigger 'error' event
+    request.abort();
+  });
 }
 
 export function rpBare(args) {
@@ -70,18 +73,22 @@ export function I18nGet(url) {
       ...Url.parse(url),
     };
     const req = http.get(options, function(res) {
-      const chunks = [];
-      res.on('data', function(chunk) {
-        chunks.push(chunk);
-      });
-      res.on('end', function() {
-        const body = Buffer.concat(chunks);
-        const metaCharset = charset(res.headers['content-type']);
-        // const bodyCharset = metaCharset || jschardet.detect(body).encoding.toLowerCase();
-        resolve(iconv.decode(body, metaCharset));
-      });
+      if (res.statusCode !== 200) {
+        this.abort();
+      } else {
+        const chunks = [];
+        res.on('data', function(chunk) {
+          chunks.push(chunk);
+        });
+        res.on('end', function() {
+          const body = Buffer.concat(chunks);
+          const metaCharset = charset(res.headers['content-type']);
+          // const bodyCharset = metaCharset || jschardet.detect(body).encoding.toLowerCase();
+          resolve(iconv.decode(body, metaCharset));
+        });
+      }
     });
-    // TODO reject if status !== 200
+    req.on('abort', reject);
     req.on('error', reject);
     abortOnTimeout(req);
   });
