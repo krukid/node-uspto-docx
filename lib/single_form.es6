@@ -1,6 +1,6 @@
 import Fs from 'fs';
 import { rmrf } from './util/file';
-import { pathsForDetails } from './util/path_helper';
+import { pathsForDetails, pathForFormFile } from './util/path_helper';
 import detailsDownload from './details_download';
 import formGenerateSync from './form_generate_sync';
 import pdfGenerate from './pdf_generate';
@@ -18,7 +18,7 @@ async function singleForm()  {
 
   await detailsDownload(serialNumber, paths);
   const details = JSON.parse(Fs.readFileSync(paths.detailsPath));
-  await rmrf(details.formPath);
+  await rmrf(pathForFormFile({ searchCode, ...details }));
 
   formGenerateSync(details, {
     "templateName": "C_final.docx",

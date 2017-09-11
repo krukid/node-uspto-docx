@@ -66,8 +66,8 @@ export function pathForImageFile({ searchCode, serialNumber }) {
   return `${pathForImageDir({ searchCode })}/${serialNumber}-logo`;
 }
 
-export function pathForFormFile({ searchCode, serialNumber, isUSA }) {
-  return `${pathForFormDir({ searchCode, isUSA })}/${serialNumber}.docx`
+export function pathForFormFile({ searchCode, regNumber, isUSA }) {
+  return `${pathForFormDir({ searchCode, isUSA })}/${regNumber}.docx`
 }
 
 export function pathForTemplateFile({ templateName, isUSA }) {
@@ -87,7 +87,7 @@ export function pathsForDetails({ searchCode, serialNumber }) {
     rawDetailsPath: pathForRawDetailsFile({ searchCode, serialNumber }),
     detailsPath: pathForDetailsFile({ searchCode, serialNumber }),
     logoPath: pathForImageFile({ searchCode, serialNumber }),
-    formPathUSA: pathForFormFile({ searchCode, serialNumber, isUSA: true }),
-    formPathINTL: pathForFormFile({ searchCode, serialNumber, isUSA: false }),
+    // formPathUSA: pathForFormFile({ searchCode, serialNumber, isUSA: true }),
+    // formPathINTL: pathForFormFile({ searchCode, serialNumber, isUSA: false }),
   }
 }

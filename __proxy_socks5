@@ -1,0 +1,2 @@
+there is an npm package http-socks5-something that can be used with request package (custom Agent)
+and make Tor-proxied requests

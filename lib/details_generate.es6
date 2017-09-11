@@ -1,5 +1,5 @@
 import Fs from 'fs';
-import { pathForDetailsDir } from './util/path_helper';
+import { pathForDetailsDir, pathForFormFile } from './util/path_helper';
 import { tracked } from './util/compose';
 import formGenerateSync from './form_generate_sync';
 
@@ -9,8 +9,9 @@ async function detailsGenerate(searchCode, options) {
   files.forEach(fileName => {
     const detailsPath = `${detailsDir}/${fileName}`;
     const details = JSON.parse(Fs.readFileSync(detailsPath));
-    if (!Fs.existsSync(details.formPath)) {
-      formGenerateSync(details, options);
+    const formPath = pathForFormFile({ searchCode, ...details });
+    if (!Fs.existsSync(formPath)) {
+      formGenerateSync(searchCode, details, options);
     }
   });
 }

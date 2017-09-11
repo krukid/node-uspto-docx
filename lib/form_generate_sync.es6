@@ -6,7 +6,7 @@ import Docxtemplater from 'docxtemplater';
 import ImageModule from 'docxtemplater-image-module';
 import sizeOf from 'image-size';
 import xmlescape from 'xml-escape';
-import { pathForTemplateFile } from './util/path_helper';
+import { pathForTemplateFile, pathForFormFile } from './util/path_helper';
 
 /**
  *
@@ -118,7 +118,7 @@ function prepareFormData(details, options) {
  * 
  */
 
-export default function formGenerateSync(details, options) {
+export default function formGenerateSync(searchCode, details, options) {
   const t0 = new Date(); // @stats
 
   const { isUSA } = details;
@@ -143,7 +143,7 @@ export default function formGenerateSync(details, options) {
   }
 
   const outputBuf = doc.getZip().generate({type: 'nodebuffer', compression: 'DEFLATE'});
-  Fs.writeFileSync(details.formPath, outputBuf);
+  Fs.writeFileSync(pathForFormFile({ searchCode, ...details }), outputBuf);
 
   console.log('* GENERATED FORM', details.serialNumber, new Date() - t0); // @log @stats
 }

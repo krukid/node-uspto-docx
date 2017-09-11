@@ -141,13 +141,13 @@ function setLogoPath(pairs, $body, paths) {
   }
 }
 
-function setFormPath(pairs, $body, paths) {
-  if (pairs.isUSA) {
-    pairs.formPath = paths.formPathUSA;
-  } else {
-    pairs.formPath = paths.formPathINTL;
-  }
-}
+// function setFormPath(pairs, $body, paths) {
+//   if (pairs.isUSA) {
+//     pairs.formPath = paths.formPathUSA;
+//   } else {
+//     pairs.formPath = paths.formPathINTL;
+//   }
+// }
 
  /**
   *
@@ -159,7 +159,7 @@ export default function detailsScrapeSync(serialNumber, detailsBody, paths) {
   setOwnerAddress(pairs, $body, paths);
   // setDateInLocation(pairs, $body, paths);
   setLogoPath(pairs, $body, paths);
-  setFormPath(pairs, $body, paths);
+  // setFormPath(pairs, $body, paths);
   debugPairs(pairs); // @debug
   return pairs;
 }
