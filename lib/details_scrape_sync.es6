@@ -28,6 +28,9 @@ const FIELDS = {
     key: 'Mark Type',
     type: 'list',
   },
+  colorDrawing: {
+    key: 'Color Drawing',
+  },
   register: {
     key: 'Register',
     type: 'list',
@@ -149,6 +152,10 @@ function setLogoPath(pairs, $body, paths) {
 //   }
 // }
 
+function setIsColorDrawing(pairs, $body, paths) {
+  pairs.isColorDrawing = pairs.colorDrawing === 'Yes';
+}
+
  /**
   *
   */
@@ -159,6 +166,7 @@ export default function detailsScrapeSync(serialNumber, detailsBody, paths) {
   setOwnerAddress(pairs, $body, paths);
   // setDateInLocation(pairs, $body, paths);
   setLogoPath(pairs, $body, paths);
+  setIsColorDrawing(pairs, $body, paths);
   // setFormPath(pairs, $body, paths);
   debugPairs(pairs); // @debug
   return pairs;

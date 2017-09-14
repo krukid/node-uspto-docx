@@ -11,9 +11,13 @@ export default function forceOutputDirectoriesSync(searchCode) {
     pathForRawDetailsDir({searchCode}),
     pathForDetailsDir({searchCode}),
     pathForImageDir({searchCode}),
-    pathForFormDir({searchCode, isUSA: true}),
-    pathForFormDir({searchCode, isUSA: false}),
-    pathForPDFDir({searchCode, isUSA: true}),
-    pathForPDFDir({searchCode, isUSA: false}),
+    pathForFormDir({searchCode, isUSA: false, isColorDrawing: false}),
+    pathForFormDir({searchCode, isUSA: false, isColorDrawing: true}),
+    pathForFormDir({searchCode, isUSA: true, isColorDrawing: false}),
+    pathForFormDir({searchCode, isUSA: true, isColorDrawing: true}),
+    pathForPDFDir({searchCode, isUSA: false, isColorDrawing: false}),
+    pathForPDFDir({searchCode, isUSA: false, isColorDrawing: true}),
+    pathForPDFDir({searchCode, isUSA: true, isColorDrawing: false}),
+    pathForPDFDir({searchCode, isUSA: true, isColorDrawing: true}),
   ].forEach(forceDirectorySync);
 }

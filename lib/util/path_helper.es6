@@ -1,3 +1,11 @@
+function getColorDir(isColorDrawing) {
+  return isColorDrawing ? 'color' : 'no-color';
+}
+
+function getRegionDir(isUSA) {
+  return isUSA ? 'usa' : 'intl';
+}
+
 /**
  *
  */
@@ -15,35 +23,31 @@ export function pathForStateFile() {
  */
 
 export function pathForIndexDir({ searchCode }) {
-  return `${APP_ROOT}/output/${searchCode}/index-html`;
+  return `${APP_ROOT}/output/cache/${searchCode}/index-html`;
 }
 
 export function pathForRawDetailsDir({ searchCode }) {
-  return `${APP_ROOT}/output/${searchCode}/details-html`;
+  return `${APP_ROOT}/output/cache/${searchCode}/details-html`;
 }
 
 export function pathForDetailsDir({ searchCode }) {
-  return `${APP_ROOT}/output/${searchCode}/details-json`;
+  return `${APP_ROOT}/output/cache/${searchCode}/details-json`;
 }
 
 export function pathForImageDir({ searchCode }) {
-  return `${APP_ROOT}/output/${searchCode}/images-logo`;
+  return `${APP_ROOT}/output/cache/${searchCode}/images-logo`;
 }
 
-export function pathForPDFDir({ searchCode, isUSA }) {
-  if (isUSA) {
-    return `${APP_ROOT}/output/${searchCode}/forms-pdf/usa`;
-  } else {
-    return `${APP_ROOT}/output/${searchCode}/forms-pdf/intl`;
-  }
+export function pathForPDFDir({ searchCode, isUSA, isColorDrawing }) {
+  const prefix = getColorDir(isColorDrawing);
+  const postfix = getRegionDir(isUSA);
+  return `${APP_ROOT}/output/${prefix}/${searchCode}/forms-pdf/${postfix}`;
 }
 
-export function pathForFormDir({ searchCode, isUSA }) {
-  if (isUSA) {
-    return `${APP_ROOT}/output/${searchCode}/forms-docx/usa`;
-  } else {
-    return `${APP_ROOT}/output/${searchCode}/forms-docx/intl`;
-  }
+export function pathForFormDir({ searchCode, isUSA, isColorDrawing }) {
+  const prefix = getColorDir(isColorDrawing);
+  const postfix = getRegionDir(isUSA);
+  return `${APP_ROOT}/output/${prefix}/${searchCode}/forms-docx/${postfix}`;
 }
 
 /**
@@ -66,8 +70,8 @@ export function pathForImageFile({ searchCode, serialNumber }) {
   return `${pathForImageDir({ searchCode })}/${serialNumber}-logo`;
 }
 
-export function pathForFormFile({ searchCode, regNumber, isUSA }) {
-  return `${pathForFormDir({ searchCode, isUSA })}/${regNumber}.docx`
+export function pathForFormFile({ searchCode, regNumber, isUSA, isColorDrawing }) {
+  return `${pathForFormDir({ searchCode, isUSA, isColorDrawing })}/${regNumber}.docx`
 }
 
 export function pathForTemplateFile({ templateName, isUSA }) {
@@ -87,7 +91,5 @@ export function pathsForDetails({ searchCode, serialNumber }) {
     rawDetailsPath: pathForRawDetailsFile({ searchCode, serialNumber }),
     detailsPath: pathForDetailsFile({ searchCode, serialNumber }),
     logoPath: pathForImageFile({ searchCode, serialNumber }),
-    // formPathUSA: pathForFormFile({ searchCode, serialNumber, isUSA: true }),
-    // formPathINTL: pathForFormFile({ searchCode, serialNumber, isUSA: false }),
   }
 }
