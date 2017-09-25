@@ -13,7 +13,7 @@ import { pathForTemplateFile, pathForFormFile } from './util/path_helper';
  */
 
 const MAX_IMAGE_WIDTH = 320;
-const MAX_IMAGE_HEIGHT = 200;
+const MAX_IMAGE_HEIGHT = 150;
 
 function getImage(tagValue, tagName) {
   return Fs.readFileSync(tagValue, 'binary');
@@ -72,7 +72,7 @@ function addYearsString(dateStr, years) {
 }
 
 function addLineBreaks(paragraph) {
-  const padding = '                 ';
+  const padding = '                ';
   return `
     <w:p>
       <w:r>

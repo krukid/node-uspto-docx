@@ -8,7 +8,7 @@
 #
 main() {
   local run_count=0
-  local max_runs=10
+  local max_runs=100000
   local run_timeout=120
   local should_run=true
 
