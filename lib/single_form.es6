@@ -20,7 +20,9 @@ async function singleForm()  {
   const details = JSON.parse(Fs.readFileSync(paths.detailsPath));
   await rmrf(pathForFormFile({ searchCode, ...details }));
 
-  formGenerateSync(details, {
+  // details.isUSA = false;
+
+  formGenerateSync(searchCode, details, {
     "templateName": "C_final.docx",
     "addYears": 5
   });
