@@ -82,10 +82,10 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
   && rm "node-v$NODE_VERSION-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-# INSTALL MS FONTS
+# INSTALL FONTS
 ############################
 
-RUN apt-get install -y software-properties-common lsb-release apt-transport-https
+RUN apt-get install -y software-properties-common lsb-release apt-transport-https fonts-crosextra-carlito
 RUN add-apt-repository "deb http://archive.canonical.com/ $(lsb_release -sc) partner" \
     && apt-get update \
     && echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
