@@ -19,17 +19,33 @@ function getImage(tagValue, tagName) {
   return Fs.readFileSync(tagValue, 'binary');
 }
 
+// function fitBox(width, height, maxW, maxH) {
+//     let limW, limH, f;
+//     const fw = width / maxW;
+//     const fh = height / maxH;
+//     if (fh > fw) {
+//       f = height / width;
+//       limW = Math.min(maxW, width);
+//       limH = limW * f;
+//     } else {
+//       f = width / height;
+//       limH = Math.min(maxH, height);
+//       limW = limH * f;
+//     }
+//   return [limW, limH];
+// }
+
 function fitBox(width, height, maxW, maxH) {
-    let limW, limH, f;
-    if (width > height) {
-      f = height / width;
-      limW = Math.min(maxW, width);
-      limH = limW * f;
-    } else {
-      f = width / height;
-      limH = Math.min(maxH, height);
-      limW = limH * f;
-    }
+  let limW, limH;
+  const fw = width / maxW;
+  const fh = height / maxH;
+  if (fh > fw) {
+    limH = Math.min(height, maxH);
+    limW = limH * width / height;
+  } else {
+    limW = Math.min(width, maxW);
+    limH = limW * height / width;
+  }
   return [limW, limH];
 }
 
