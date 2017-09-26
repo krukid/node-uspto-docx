@@ -72,9 +72,11 @@ function extractValue($value, {type}) {
       return $value.children('div').toArray().map(divNode =>
         Cheerio(divNode).text().replace(/\s+/g, ' ').trim());
     case 'list':
-      return $value.text().replace(/\s+/g, ' ').split(',').map(item => item.trim());
+      return $value.text().replace(/\s+/g, ' ').split(',')
+        .map(item => item.trim()).filter(item => item.length > 0);
     case 'class-list':
-      return $value.text().replace(/[^\d,]/g, '').split(',');
+      return $value.text().replace(/[^\d,]/g, '').split(',')
+        .filter(item => item.length > 0);
     default:
       return $value.text().trim();
   }
