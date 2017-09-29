@@ -33,3 +33,15 @@ export function rmrf(path) {
     });
   });
 }
+
+// export function exists(path) {
+//   return new Promise(function(resolve, reject) {
+//     Fs.access(path, Fs.constants.R_OK, (err) => {
+//       if (err) {
+//         resolve(false);
+//       } else {
+//         resolve(true);
+//       }
+//     });
+//   });
+// }

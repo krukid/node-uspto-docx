@@ -34,7 +34,9 @@ async function detailsDownloadForPage(searchCode, { pageIndex }) {
   for (let i = 0; i < $anchors.length; i += 4) {
     const serialNumber = $anchors.eq(i).text();
     const paths = pathsForDetails({ searchCode, serialNumber });
-    if (!Fs.existsSync(paths.rawDetailsPath)) {
+    // @note should probably extract scraping from detailsDownload,
+    // which would decouple these concerns and improve maintenance
+    if (!Fs.existsSync(paths.detailsPath)) {
       const isWithoutNetwork = await detailsDownload(serialNumber, paths);
       if (!isWithoutNetwork) {
         await timeout(3000);
