@@ -123,7 +123,7 @@ function prepareFormData(details, options) {
     register: details.register.includes('Principal') ? 'Principal' : '',
     filingDate: details.filingDate,
     intClasses: details.intClasses.join(', '),
-    dateInLocation: details.regDate,
+    dateInLocation: details.dateInLocation,
     regDate: details.regDate,
     serialNumber: details.serialNumber,
     logoPath: details.logoPath,

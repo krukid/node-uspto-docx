@@ -44,6 +44,9 @@ const FIELDS = {
   serialNumber: {
     key: 'US Serial Number',
   },
+  dateInLocation: {
+    key: 'Date in Location',
+  },
 };
 
 /**
@@ -170,6 +173,6 @@ export default function detailsScrapeSync(serialNumber, detailsBody, paths) {
   setLogoPath(pairs, $body, paths);
   setIsColorDrawing(pairs, $body, paths);
   // setFormPath(pairs, $body, paths);
-  debugPairs(pairs); // @debug
+  // debugPairs(pairs); // @debug
   return pairs;
 }
