@@ -19,22 +19,6 @@ function getImage(tagValue, tagName) {
   return Fs.readFileSync(tagValue, 'binary');
 }
 
-// function fitBox(width, height, maxW, maxH) {
-//     let limW, limH, f;
-//     const fw = width / maxW;
-//     const fh = height / maxH;
-//     if (fh > fw) {
-//       f = height / width;
-//       limW = Math.min(maxW, width);
-//       limH = limW * f;
-//     } else {
-//       f = width / height;
-//       limH = Math.min(maxH, height);
-//       limW = limH * f;
-//     }
-//   return [limW, limH];
-// }
-
 function fitBox(width, height, maxW, maxH) {
   let limW, limH;
   const fw = width / maxW;
@@ -87,17 +71,20 @@ function addYearsString(dateStr, years) {
     .format(DATE_FORMAT);
 }
 
+// @see http://officeopenxml.com/WPcontentOverview.php
 function addLineBreaks(paragraph) {
-  const padding = '                ';
   return `
     <w:p>
+      <w:pPr>
+        <w:ind w:left="892" />
+      </w:pPr>
       <w:r>
         <w:rPr>
           <w:rFonts w:ascii="Arial" w:hAnsi="Arial"/>
           <w:sz w:val="20"/>
           <w:color w:val="333333"/>
         </w:rPr>
-        ${paragraph.map(l => `<w:t xml:space="preserve">${padding}${xmlescape(l)}</w:t>`).join('<w:br/>')}
+        ${paragraph.map(l => `<w:t xml:space="preserve">${xmlescape(l)}</w:t>`).join('<w:br/>')}
       </w:r>
     </w:p>
   `;
