@@ -91,14 +91,66 @@ function addLineBreaks(paragraph) {
   // then in your template, just put {@text} instead of the usual {text}
 }
 
-function prepareFormData(details, options) {
-  if (!details.ownerAddress || !details.markType || !details.register || !details.intClasses || !details.regDate) {
-    console.error('!!! [WARN] Irregular details', details);
-    details.ownerAddress = details.ownerAddress || [];
-    details.markType = details.markType || [];
-    details.register = details.register || [];
-    details.intClasses = details.intClasses || [];
+function isSetOf(source, values) {
+  return source.length > 0 && source.length === source.filter(x => values.includes(x)).length;
+}
+
+const VALID_TM = ['Trademark', 'Service Mark'];
+const VALID_RG = ['Principal'];
+
+function validateDetails(details) {
+  const errors = {}
+
+  if (!isSetOf(details.register, VALID_RG)) {
+    errors.register = `Bad register`
   }
+  if (!isSetOf(details.markType, VALID_TM)) {
+    errors.markType = `Bad markType`
+  }
+  if (details.intClasses.length === 0) {
+    errors.intClasses = `Bad intClasses`
+  }
+  if (details.ownerAddress.length === 0) {
+    errors.ownerAddress = `Empty address`
+  }
+  if (details.regDate.length === 0) {
+    errors.regDate = `Empty regDate`
+  }
+  if (details.ownerName.length === 0) {
+    errors.ownerName = `Empty ownerName`
+  }
+  if (details.filingDate.length === 0) {
+    errors.filingDate = `Empty filingDate`
+  }
+  if (details.serialNumber.length === 0) {
+    errors.serialNumber = `Empty serialNumber`
+  }
+  if (details.dateInLocation.length === 0) {
+    errors.dateInLocation = `Empty dateInLocation`
+  }
+  // if (details.tradeMark.length === 0) {
+  //   errors.tradeMark = `Empty tradeMark`
+  // }
+  if (details.regNumber.length === 0) {
+    errors.regNumber = `Empty regNumber`
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return errors
+  } else {
+    return null
+  }
+}
+
+
+function prepareFormData(details, options) {
+
+  const errors = validateDetails(details)
+  if (errors !== null) {
+    console.log(`[INVALID] Skipping unexpected details`, errors)
+    return null
+  }
+
   return {
     ownerName: details.ownerName,
     ownerAddress: addLineBreaks(details.ownerAddress),
@@ -107,7 +159,7 @@ function prepareFormData(details, options) {
     classCount: details.intClasses.length,
     renewalDate: addYearsString(details.regDate, options.addYears),
     markType: details.markType.join(', '),
-    register: details.register.includes('Principal') ? 'Principal' : '',
+    register: details.register.join(', '),
     filingDate: details.filingDate,
     intClasses: details.intClasses.join(', '),
     dateInLocation: details.dateInLocation,
@@ -129,6 +181,10 @@ export default function formGenerateSync(searchCode, details, options) {
   const templatePath = pathForTemplateFile({templateName, isUSA});
   const doc = loadDoc(templatePath);
   const data = prepareFormData(details, options);
+  if (data === null) {
+    // console.log('* SKIPPED INVALID FORM', details.serialNumber, new Date() - t0); // @log @stats
+    return
+  }
   doc.setData(data);
 
   try {

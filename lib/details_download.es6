@@ -43,6 +43,7 @@ export default async function detailsDownload(serialNumber, paths) {
   try {
     let isWithoutNetwork = true;
 
+    console.log('# downloading details', paths.rawDetailsPath)
     const isDetailsCached = Fs.existsSync(paths.rawDetailsPath);
     const detailsBody = await cachedDetailsDownload(serialNumber, paths.rawDetailsPath, isDetailsCached);
     isWithoutNetwork = isWithoutNetwork && isDetailsCached;
@@ -51,6 +52,7 @@ export default async function detailsDownload(serialNumber, paths) {
     Fs.writeFileSync(paths.detailsPath, JSON.stringify(details));
 
     if (details.logoPath) {
+      console.log('# downloading logo', paths.logoPath)
       const isLogoCached = Fs.existsSync(details.logoPath);
       await cachedLogoDownload(serialNumber, details.logoPath, isLogoCached);
       isWithoutNetwork = isWithoutNetwork && isLogoCached;
