@@ -2,7 +2,7 @@ import Fs from 'fs';
 import { rmrf } from '../util/file';
 import { pathsForDetails, pathForFormFile } from '../util/path_helper';
 import detailsDownload from '../details_download';
-import formGenerateSync from '../form_generate_sync';
+import formGenerate from '../form_generate';
 import pdfGenerate from '../pdf_generate';
 import forceOutputDirectoriesSync from '../util/force_output_directories_sync';
 
@@ -22,7 +22,7 @@ async function singleForm()  {
 
   // details.isUSA = false;
 
-  formGenerateSync(searchCode, details, {
+  await formGenerate(searchCode, details, {
     "templateName": "C_final.docx",
     "addYears": 5
   });

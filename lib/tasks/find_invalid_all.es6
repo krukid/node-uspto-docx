@@ -77,7 +77,7 @@ findJSON(`${APP_ROOT}/output/cache`).then(paths => {
       errors.dateInLocation += 1
     }
     if (json.tradeMark.length === 0) {
-      isInvalid = `${isInvalid}tradeMark;`
+      // isInvalid = `${isInvalid}tradeMark;`
       errors.tradeMark += 1
     }
     if (json.regNumber.length === 0) {

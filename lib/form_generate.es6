@@ -1,4 +1,5 @@
 import Fs from 'fs';
+import { spawn } from 'child_process';
 import Path from 'path';
 import Moment from 'moment';
 import JSZip from 'jszip';
@@ -168,13 +169,42 @@ function prepareFormData(details, options) {
     logoPath: details.logoPath,
   };
 }
+
+function isBadLogo(path) {
+  return new Promise((resolve, reject) => {
+    const child = spawn('/usr/bin/identify', [path], {});
+
+    // child.stdout.on('data', function (data) {
+    //   console.log(data.toString().trim());
+    // });
+
+    // child.stderr.on('data', function (data) {
+    //   console.log(data.toString().trim());
+    // });
+
+    child.on('close', function (code) {
+      // console.log(`[INFO] child process exited with code: ${code}`);
+      if (code === 0) {
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    });
+  });
+}
  
 /**
  * 
  */
 
-export default function formGenerateSync(searchCode, details, options) {
+export default async function formGenerate(searchCode, details, options) {
   const t0 = new Date(); // @stats
+
+  const isResetLogo = await isBadLogo(details.logoPath);
+  if (isResetLogo) {
+    console.log('[WARN] Logo is bad', details.logoPath);
+    details.logoPath = null;
+  }
 
   const { isUSA } = details;
   const { templateName } = options;
@@ -197,6 +227,7 @@ export default function formGenerateSync(searchCode, details, options) {
       stack: error.stack,
       properties: error.properties,
     }
+    console.log(`Error geenerating template: ${templateName}`, details)
     console.log(JSON.stringify({error: json})); // @debug
     throw error;
   }
