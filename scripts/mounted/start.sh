@@ -9,7 +9,7 @@
 main() {
   local run_count=0
   local max_runs=100000
-  local run_timeout=120
+  local run_timeout=0
   local should_run=true
 
   # https://stackoverflow.com/questions/6871859/piping-command-output-to-tee-but-also-save-exit-code-of-command

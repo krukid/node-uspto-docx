@@ -23,7 +23,7 @@ DIFF_HOURS=$(calc "$DIFF / 3600")
 
 # calculate total item count
 COUNT=$(echo "$TIMES" |wc -l)
-COUNT_EST=25000
+COUNT_EST=25875
 REMAIN=$(calc "$COUNT_EST - $COUNT")
 
 # calculate average time per item

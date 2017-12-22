@@ -39,7 +39,7 @@ async function detailsDownloadForPage(searchCode, { pageIndex }) {
     if (!Fs.existsSync(paths.detailsPath)) {
       const isWithoutNetwork = await detailsDownload(serialNumber, paths);
       if (!isWithoutNetwork) {
-        await timeout(3000);
+        await timeout(1500);
       }
     }
   }
