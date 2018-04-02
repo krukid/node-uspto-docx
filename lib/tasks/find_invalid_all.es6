@@ -16,6 +16,39 @@ function isSetOf(source, values) {
 
 const VALID_TM = ['Trademark', 'Service Mark'];
 const VALID_RG = ['Principal'];
+const INVALID_OWNER_NAMES = [
+  'American Finance Association',
+  'American Media Operations, Inc.',
+  'Boyd Gaming Corporation',
+  'Center for Occupational Research & Development Inc',
+  'Danstar Ferment AG',
+  'Dow Cover Company Inc.',
+  'General Electric Company',
+  'Jay-Lor International, Inc.',
+  'Larchmont Buzz LLC',
+  'Performance Food Group, Inc.',
+  'Pulse Structural Monitoring Limited',
+  'Top Glory Business Limited',
+  'University of Central Missouri',
+  'University of Colorado',
+  'VP of Finance',
+  'Weider Publications, LLC',
+];
+
+// const INVALID_OWNER_ADDRS = [
+//   '6465 South Rainbow Boulevard',
+//   '1800 Grant Street, Suite 745',
+//   '1000 American Media Way',
+// ];
+
+function isOwnerNameInvalid(ownerName) {
+  const lowerCaseName = ownerName ? ownerName.toLowerCase() : ''
+  if (INVALID_OWNER_NAMES.find(x => lowerCaseName === x.toLowerCase())) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 findJSON(`${APP_ROOT}/output/cache`).then(paths => {
   console.log('Total details count', paths.length);
@@ -30,6 +63,7 @@ findJSON(`${APP_ROOT}/output/cache`).then(paths => {
     ownerAddress: 0,
     regDate: 0,
     ownerName: 0,
+    ownerNameBlacklist: 0,
     filingDate: 0,
     serialNumber: 0,
     dateInLocation: 0,
@@ -63,6 +97,10 @@ findJSON(`${APP_ROOT}/output/cache`).then(paths => {
     if (json.ownerName.length === 0) {
       isInvalid = `${isInvalid}ownerName;`
       errors.ownerName += 1
+    } else if (isOwnerNameInvalid(json.ownerName)) {
+      console.log(`[sn#${json.serialNumber}; rn#${json.regNumber}] ${json.ownerName}`);
+      isInvalid = `${isInvalid}ownerNameBlacklist;`
+      errors.ownerNameBlacklist += 1
     }
     if (json.filingDate.length === 0) {
       isInvalid = `${isInvalid}filingDate;`
@@ -91,7 +129,7 @@ findJSON(`${APP_ROOT}/output/cache`).then(paths => {
       // const docPath = pathForFormFile({ searchCode, ...json });
       // const pdfPath = docPath.replace('forms-docx', 'forms-pdf').replace('.docx', '.pdf')
       
-      console.log("!!! invalid", json.serialNumber, isInvalid);
+      // console.log("!!! invalid", json.serialNumber, isInvalid);
       // console.log('  docx', docPath.replace('/app/output', ''))
       // console.log('  pdf ', pdfPath.replace('/app/output', ''));
       invalid += 1;

@@ -98,6 +98,40 @@ function isSetOf(source, values) {
 
 const VALID_TM = ['Trademark', 'Service Mark'];
 const VALID_RG = ['Principal'];
+const INVALID_OWNER_NAMES = [
+  'American Finance Association',
+  'American Media Operations, Inc.',
+  'Boyd Gaming Corporation',
+  'Center for Occupational Research & Development Inc',
+  'Danstar Ferment AG',
+  'Dow Cover Company Inc.',
+  'General Electric Company',
+  'Jay-Lor International, Inc.',
+  'Larchmont Buzz LLC',
+  'Performance Food Group, Inc.',
+  'Pulse Structural Monitoring Limited',
+  'Top Glory Business Limited',
+  'University of Central Missouri',
+  'University of Colorado',
+  'VP of Finance',
+  'Weider Publications, LLC',
+];
+
+// const INVALID_OWNER_ADDRS = [
+//   '6465 South Rainbow Boulevard',
+//   '1800 Grant Street, Suite 745',
+//   '1000 American Media Way',
+// ];
+
+function isOwnerNameInvalid(ownerName) {
+  const lowerCaseName = ownerName ? ownerName.toLowerCase() : ''
+  if (INVALID_OWNER_NAMES.find(x => lowerCaseName === x.toLowerCase())) {
+    // console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~~ ${ownerName}`);
+    return true;
+  } else {
+    return false;
+  }
+}
 
 function validateDetails(details) {
   const errors = {}
@@ -119,6 +153,8 @@ function validateDetails(details) {
   }
   if (details.ownerName.length === 0) {
     errors.ownerName = `Empty ownerName`
+  } else if (isOwnerNameInvalid(details.ownerName)) {
+    errors.ownerName = `Invalid ownerName`
   }
   if (details.filingDate.length === 0) {
     errors.filingDate = `Empty filingDate`
@@ -142,7 +178,6 @@ function validateDetails(details) {
     return null
   }
 }
-
 
 function prepareFormData(details, options) {
 
