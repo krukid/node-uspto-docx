@@ -107,6 +107,18 @@ ENV JRE_HOME /usr/lib/jvm/java-8-oracle/jre
 
 RUN apt-get install -y libreoffice-writer
 
+# INSTALL GHOSTSCRIPT
+
+RUN cd /usr/local \
+  && wget https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs923/ghostscript-9.23.tar.gz
+
+RUN cd /usr/local \
+  && tar -zxf ghostscript-9.23.tar.gz \
+  && cd ghostscript-9.23 \
+  && ./configure \
+  && make \
+  && make install
+
 # SETUP APP
 ############################
 

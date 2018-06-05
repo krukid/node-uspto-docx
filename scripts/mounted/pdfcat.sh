@@ -1,7 +1,7 @@
 #!/bin/bash
 
-IN_PATH=./output/test-merge/in
-OUT_PATH=./output/test-merge/out
+IN_PATH=./output/test-merge/0518-split
+OUT_PATH=./output/test-merge/0518-join
 
 # shopt -s nullglob
 
@@ -23,7 +23,19 @@ flush() {
 
         echo "FLUSHING: ${#BUFFER[@]} > ${PATH_CAT}"
         mkdir -p "$DIR_CAT" && \
-            gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE="$PATH_CAT" -dBATCH ${BUFFER[@]}
+            gs -q \
+                -sOUTPUTFILE="$PATH_CAT" \
+                -sDEVICE=pdfwrite \
+                -dNOPAUSE \
+                -dPDFSETTINGS=/prepress \
+                -dOPTIMIZE=false \
+                -dCompressPages=false \
+                -dCompatibilityLevel=1.4 \
+                -dEmbedAllFonts=true \
+                -dSubsetFonts=false \
+                -dPostRenderingEnhance=false \
+                -dPreRenderingEnhance=false \
+                -dBATCH ${BUFFER[@]}
 
         BUFFER=()
 
