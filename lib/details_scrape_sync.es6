@@ -136,7 +136,7 @@ function extractPairs(pairs, $body) {
 function setOwnerAddress(pairs, $body, paths) {
   if (pairs.ownerAddress) {
     pairs.ownerAddress = pairs.ownerAddress.map(line => {
-      const newLine = line.replace(/\bUNITED STATES /, '');
+      const newLine = line.replace(/\bUNITED STATES /, '').replace(/ UNITED STATES\b/, '');
       pairs.isUSA = newLine !== line;
       return newLine;
     });

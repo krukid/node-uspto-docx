@@ -1,7 +1,7 @@
 #!/bin/bash
 
-IN_PATH=./output/test-merge/0518-split
-OUT_PATH=./output/test-merge/0518-join
+IN_PATH=./output/test-merge/0718-split
+OUT_PATH=./output/test-merge/0718-join
 
 # shopt -s nullglob
 
@@ -40,7 +40,7 @@ flush() {
         BUFFER=()
 
         echo "******* FLUSHED OK"
-        sleep 10
+        # sleep 10
     fi
 }
 

@@ -98,24 +98,7 @@ function isSetOf(source, values) {
 
 const VALID_TM = ['Trademark', 'Service Mark'];
 const VALID_RG = ['Principal'];
-const INVALID_OWNER_NAMES = [
-  'American Finance Association',
-  'American Media Operations, Inc.',
-  'Boyd Gaming Corporation',
-  'Center for Occupational Research & Development Inc',
-  'Danstar Ferment AG',
-  'Dow Cover Company Inc.',
-  'General Electric Company',
-  'Jay-Lor International, Inc.',
-  'Larchmont Buzz LLC',
-  'Performance Food Group, Inc.',
-  'Pulse Structural Monitoring Limited',
-  'Top Glory Business Limited',
-  'University of Central Missouri',
-  'University of Colorado',
-  'VP of Finance',
-  'Weider Publications, LLC',
-];
+const INVALID_OWNER_NAMES = Fs.readFileSync('./blacklist').toString().trim().split(/\r?\n/);
 
 // const INVALID_OWNER_ADDRS = [
 //   '6465 South Rainbow Boulevard',
