@@ -1,7 +1,9 @@
 #!/bin/bash
 
-IN_PATH=./output/test-merge/0718-split
-OUT_PATH=./output/test-merge/0718-join
+#IN_PATH=./output/test-merge/0718-split
+#OUT_PATH=./output/test-merge/0718-join
+IN_PATH='./output/test-merge/0718-split/no-color/199910$[RD] AND LIVE[LD]/forms-pdf/usa'
+OUT_PATH=./output/test-merge/0718-test
 
 # shopt -s nullglob
 
@@ -18,7 +20,7 @@ flush() {
     if [[ "${#BUFFER[@]}" -gt 0 ]]; then
         NAME_FROM=$(basename "${BUFFER[0]}" .pdf)
         NAME_TO=$(basename "${BUFFER[-1]}" .pdf)
-        DIR_CAT="${OUT_PATH}${DIR#$IN_PATH}"
+        DIR_CAT="${OUT_PATH}${DIR#"$IN_PATH"}"
         PATH_CAT="${DIR_CAT}/${NAME_FROM}_${NAME_TO}.pdf"
 
         echo "FLUSHING: ${#BUFFER[@]} > ${PATH_CAT}"
