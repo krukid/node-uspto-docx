@@ -20,6 +20,7 @@ import detailsGenerate from './lib/details_generate';
 import pdfGenerate from './lib/pdf_generate';
 
 // NOTE can launch express web server to render friendly `run.json` state
+// NOTE alternatively use pm2 free tier
 async function workflow() {
   const config = readConfigSync();
   await promiseChain(config.queries, async ({searchCode, ...options}) => {
