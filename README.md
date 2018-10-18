@@ -50,7 +50,12 @@ You will need to create two files in application root directory before running t
             {
                 "searchCode": "...",
                 "templateName": "X_tmpl.docx",
-                "addYears": 20
+                "addYears": {
+                    "renewalDate": 20,
+                    "filingDate": 0,
+                    "dateInLocation": 0,
+                    "regDate": 0
+                }
             },
             ...
         ]

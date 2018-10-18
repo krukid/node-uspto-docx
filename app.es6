@@ -32,7 +32,7 @@ async function workflow() {
   return promiseChain(config.queries, async ({searchCode, ...options}) => {
     await detailsGenerate(searchCode, options);
     await pdfGenerate(searchCode);
-  })
+  });
 }
 
 workflow().then(function() {

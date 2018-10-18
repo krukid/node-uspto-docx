@@ -24,7 +24,12 @@ async function singleForm()  {
 
   await formGenerate(searchCode, details, {
     "templateName": "C_final.docx",
-    "addYears": 5
+    "addYears": {
+      "renewalDate": 5,
+      "regDate": 0,
+      "filingDate": 0,
+      "dateInLocation": 0,
+    }
   });
 
   pdfGenerate(searchCode);

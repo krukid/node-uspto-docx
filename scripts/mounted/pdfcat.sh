@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#IN_PATH=./output/test-merge/0718-split
-#OUT_PATH=./output/test-merge/0718-join
-IN_PATH='./output/test-merge/0718-split/no-color/199910$[RD] AND LIVE[LD]/forms-pdf/usa'
-OUT_PATH=./output/test-merge/0718-test
+IN_PATH=./output/test-merge/1810-split
+OUT_PATH=./output/test-merge/1810-join
+#IN_PATH='./output/test-merge/1807-split/no-color/199910$[RD] AND LIVE[LD]/forms-pdf/usa'
+#OUT_PATH=./output/test-merge/1807-test
 
 # shopt -s nullglob
 

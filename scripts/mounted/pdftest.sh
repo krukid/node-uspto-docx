@@ -18,7 +18,9 @@ testPDFDir() {
     echo "[$_IDENT] Processing completed."
 }
 
-testPDFDir split ./output/test-merge/0718-split
-testPDFDir join ./output/test-merge/0718-join
+echo "Testing PDFs for errors..."
+
+testPDFDir split ./output/test-merge/1810-split
+testPDFDir join ./output/test-merge/1810-join
 
 echo "Done."

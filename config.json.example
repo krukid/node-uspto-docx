@@ -3,17 +3,42 @@
     {
       "searchCode": "201309$[RD]",
       "templateName": "A_final.docx",
-      "addYears": 5
+      "addYears": {
+        "renewalDate": 5,
+        "filingDate": 0,
+        "dateInLocation": 0,
+        "regDate": 0
+      }
     },
     {
       "searchCode": "200909$[RD] AND LIVE[LD]",
       "templateName": "B_final.docx",
-      "addYears": 9
+      "addYears": {
+        "renewalDate": 9,
+        "filingDate": 0,
+        "dateInLocation": 0,
+        "regDate": 0
+      }
     },
     {
       "searchCode": "199909$[RD] AND LIVE[LD]",
       "templateName": "C_final.docx",
-      "addYears": 19
+      "addYears": {
+        "renewalDate": 19,
+        "filingDate": 0,
+        "dateInLocation": 0,
+        "regDate": 0
+      }
+    },
+    {
+      "searchCode": "198909$[RD] AND LIVE[LD]",
+      "templateName": "D_final.docx",
+      "addYears": {
+        "renewalDate": 29,
+        "filingDate": 0,
+        "dateInLocation": 0,
+        "regDate": 0
+      }
     }
   ]
 }
