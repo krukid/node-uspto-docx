@@ -23,13 +23,16 @@ async function singleForm()  {
   // details.isUSA = false;
 
   await formGenerate(searchCode, details, {
-    "templateName": "C_final.docx",
+    "templateNames": {
+      "usa": "F.docx",
+      "intl": "N.docx",
+    },
     "addYears": {
       "renewalDate": 5,
       "regDate": 0,
       "filingDate": 0,
       "dateInLocation": 0,
-    }
+    },
   });
 
   pdfGenerate(searchCode);

@@ -225,8 +225,8 @@ export default async function formGenerate(searchCode, details, options) {
   }
 
   const { isUSA } = details;
-  const { templateName } = options;
-  const templatePath = pathForTemplateFile({templateName, isUSA});
+  const { templateNames } = options;
+  const templatePath = pathForTemplateFile({templateNames, isUSA});
   const doc = loadDoc(templatePath);
   const data = prepareFormData(details, options);
   if (data === null) {
@@ -245,7 +245,7 @@ export default async function formGenerate(searchCode, details, options) {
       stack: error.stack,
       properties: error.properties,
     }
-    console.log(`Error geenerating template: ${templateName}`, details)
+    console.log(`Error generating template: ${templatePath}`, details);
     console.log(JSON.stringify({error: json})); // @debug
     throw error;
   }

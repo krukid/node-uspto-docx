@@ -49,7 +49,10 @@ You will need to create two files in application root directory before running t
         "queries": [
             {
                 "searchCode": "...",
-                "templateName": "X_tmpl.docx",
+                "templateNames": {
+                    "usa": "X_tmpl.docx",
+                    "intl": "Y_tmpl.docx"
+                },
                 "addYears": {
                     "renewalDate": 20,
                     "filingDate": 0,

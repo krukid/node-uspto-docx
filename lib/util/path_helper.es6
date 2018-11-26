@@ -74,11 +74,11 @@ export function pathForFormFile({ searchCode, regNumber, isUSA, isColorDrawing }
   return `${pathForFormDir({ searchCode, isUSA, isColorDrawing })}/${regNumber}.docx`
 }
 
-export function pathForTemplateFile({ templateName, isUSA }) {
+export function pathForTemplateFile({ templateNames, isUSA }) {
   if (isUSA) {
-    return `${APP_ROOT}/templates/usa.${templateName}`;
+    return `${APP_ROOT}/templates/${templateNames.usa}`;
   } else {
-    return `${APP_ROOT}/templates/intl.${templateName}`;
+    return `${APP_ROOT}/templates/${templateNames.intl}`;
   }
 }
 
