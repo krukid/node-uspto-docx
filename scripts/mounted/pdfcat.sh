@@ -1,7 +1,7 @@
 #!/bin/bash
 
-IN_PATH=./output/test-merge/1810-split
-OUT_PATH=./output/test-merge/1810-join
+IN_PATH=./output/test-merge/190213-split-a
+OUT_PATH=./output/test-merge/190213-join-a
 #IN_PATH='./output/test-merge/1807-split/no-color/199910$[RD] AND LIVE[LD]/forms-pdf/usa'
 #OUT_PATH=./output/test-merge/1807-test
 
@@ -9,7 +9,7 @@ OUT_PATH=./output/test-merge/1810-join
 
 echo "Indexing ${IN_PATH}..."
 # IFS=$'\n' PDFS=($(find $IN_PATH -maxdepth 2 -name "*.pdf"))
-IFS=$'\n' PDFS=($(find "${IN_PATH}" -name "*.pdf"))
+IFS=$'\n' PDFS=($(find "${IN_PATH}" -name "*.pdf" | sort))
 echo "Indexing completed (${#PDFS[@]} PDFs found)"
 
 BUFMAX=1500
@@ -23,21 +23,26 @@ flush() {
         DIR_CAT="${OUT_PATH}${DIR#"$IN_PATH"}"
         PATH_CAT="${DIR_CAT}/${NAME_FROM}_${NAME_TO}.pdf"
 
-        echo "FLUSHING: ${#BUFFER[@]} > ${PATH_CAT}"
-        mkdir -p "$DIR_CAT" && \
-            gs -q \
-                -sOUTPUTFILE="$PATH_CAT" \
-                -sDEVICE=pdfwrite \
-                -dNOPAUSE \
-                -dPDFSETTINGS=/prepress \
-                -dOPTIMIZE=false \
-                -dCompressPages=false \
-                -dCompatibilityLevel=1.4 \
-                -dEmbedAllFonts=true \
-                -dSubsetFonts=false \
-                -dPostRenderingEnhance=false \
-                -dPreRenderingEnhance=false \
-                -dBATCH ${BUFFER[@]}
+        # echo "Processing ${PATH_CAT} $([[ ! -e "${PATH_CAT}" ]] && echo "NOT FOUND!")"
+        # if [[ "${PATH_CAT}" = './output/test-merge/190213-join-a/no-color/201409$[RD]/forms-pdf/usa/4594782_4596999.pdf' ]]; then
+          echo "FLUSHING: ${#BUFFER[@]} > ${PATH_CAT}"
+          mkdir -p "$DIR_CAT" && \
+              gs -q \
+                  -sOUTPUTFILE="$PATH_CAT" \
+                  -sDEVICE=pdfwrite \
+                  -dNOPAUSE \
+                  -dPDFSETTINGS=/prepress \
+                  -dOPTIMIZE=false \
+                  -dCompressPages=false \
+                  -dCompatibilityLevel=1.4 \
+                  -dEmbedAllFonts=true \
+                  -dSubsetFonts=false \
+                  -dPostRenderingEnhance=false \
+                  -dPreRenderingEnhance=false \
+                  -dBATCH ${BUFFER[@]}
+        # else
+        #   echo "Skipping..."
+        # fi
 
         BUFFER=()
 

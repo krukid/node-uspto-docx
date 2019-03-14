@@ -1,5 +1,7 @@
 #!/bin/bash
 
+INVALID_COUNT=0
+
 testPDFDir() {
     local _IDENT="$1"
     local _PATH="$2"
@@ -13,6 +15,7 @@ testPDFDir() {
         gs -dNOPAUSE -dBATCH -dDEBUG -dPDFSTOPONWARNING -sDEVICE=nullpage "$f" &> /dev/null
         if [[ "$?" != "0" ]]; then
             echo "[$_IDENT] INVALID PDF: $f"
+            INVALID_COUNT=$((INVALID_COUNT + 1))
         fi
     done
     echo "[$_IDENT] Processing completed."
@@ -20,7 +23,7 @@ testPDFDir() {
 
 echo "Testing PDFs for errors..."
 
-testPDFDir split ./output/test-merge/1810-split
-testPDFDir join ./output/test-merge/1810-join
+testPDFDir join ./output/test-merge/190211-join-b
+#testPDFDir split ./output/test-merge/190213-split-a
 
-echo "Done."
+echo "Done. Invalid PDFs: ${INVALID_COUNT}"

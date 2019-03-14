@@ -1,0 +1,56 @@
+{
+  "queries": [
+    {
+      "searchCode": "201506$[RD]",
+      "templateNames": {
+        "usa": "B-D.docx",
+        "intl": "B-L.docx"
+      },
+      "addYears": {
+        "renewalDate": 4,
+        "filingDate": -1,
+        "dateInLocation": 0,
+        "regDate": -1
+      }
+    },
+    {
+      "searchCode": "201106$[RD] AND LIVE[LD]",
+      "templateNames": {
+        "usa": "B-E.docx",
+        "intl": "B-M.docx"
+      },
+      "addYears": {
+        "renewalDate": 8,
+        "filingDate": -1,
+        "dateInLocation": 0,
+        "regDate": -1
+      }
+    },
+    {
+      "searchCode": "200106$[RD] AND LIVE[LD]",
+      "templateNames": {
+        "usa": "B-F.docx",
+        "intl": "B-N.docx"
+      },
+      "addYears": {
+        "renewalDate": 18,
+        "filingDate": -1,
+        "dateInLocation": 0,
+        "regDate": -1
+      }
+    },
+    {
+      "searchCode": "199106$[RD] AND LIVE[LD]",
+      "templateNames": {
+        "usa": "B-G.docx",
+        "intl": "B-P.docx"
+      },
+      "addYears": {
+        "renewalDate": 28,
+        "filingDate": -1,
+        "dateInLocation": 0,
+        "regDate": -1
+      }
+    }
+  ]
+}
