@@ -9,7 +9,7 @@
 main() {
   local run_count=0
   local max_runs=100000
-  local run_timeout=60
+  local run_timeout=0
   local should_run=true
 
   # https://stackoverflow.com/questions/6871859/piping-command-output-to-tee-but-also-save-exit-code-of-command
@@ -18,7 +18,7 @@ main() {
   while $should_run; do
     run_count=$(($run_count+1))
     ########################### MAIN COMMAND
-    node -r dotenv/config index.js
+    node -r ./wrapper ./lib/app.es6
     ########################### END
     run_code=$?
     if [[ $run_code -ne 0 && $run_count -lt $max_runs ]]; then

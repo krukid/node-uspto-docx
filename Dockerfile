@@ -119,18 +119,19 @@ RUN cd /usr/local \
   && make \
   && make install
 
+# INSTALL SSH SERVER
+############################
+
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir -p /root/.ssh /run/sshd
+# @note linux host supports symlinking mounted authorized_keys, windows host does not
+COPY ./ssh/authorized_keys /root/.ssh
+
 # SETUP APP
 ############################
 
-RUN mkdir /app
 WORKDIR /app
+VOLUME ["/app", "/mount/backup"]
+EXPOSE 22
 
-COPY package.json /app
-RUN npm install
-
-COPY . /app
-
-# DEFAULT IMAGE CMD
-############################
-
-CMD /bin/bash
+CMD ["/usr/sbin/sshd", "-D"]

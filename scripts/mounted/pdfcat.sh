@@ -1,7 +1,7 @@
 #!/bin/bash
 
-IN_PATH=./output/test-merge/190213-split-a
-OUT_PATH=./output/test-merge/190213-join-a
+IN_PATH=./output/test-merge/190615-split-b
+OUT_PATH=./output/test-merge/190615-join-b
 #IN_PATH='./output/test-merge/1807-split/no-color/199910$[RD] AND LIVE[LD]/forms-pdf/usa'
 #OUT_PATH=./output/test-merge/1807-test
 
@@ -23,8 +23,8 @@ flush() {
         DIR_CAT="${OUT_PATH}${DIR#"$IN_PATH"}"
         PATH_CAT="${DIR_CAT}/${NAME_FROM}_${NAME_TO}.pdf"
 
-        # echo "Processing ${PATH_CAT} $([[ ! -e "${PATH_CAT}" ]] && echo "NOT FOUND!")"
-        # if [[ "${PATH_CAT}" = './output/test-merge/190213-join-a/no-color/201409$[RD]/forms-pdf/usa/4594782_4596999.pdf' ]]; then
+        echo "Processing ${PATH_CAT} $([[ ! -e "${PATH_CAT}" ]] && echo "NOT FOUND!")"
+        if [[ "${PATH_CAT}" = './output/test-merge/190615-join-b/no-color/200201$[RD] AND LIVE[LD]/forms-pdf/usa/2529994_2534985.pdf' ]]; then
           echo "FLUSHING: ${#BUFFER[@]} > ${PATH_CAT}"
           mkdir -p "$DIR_CAT" && \
               gs -q \
@@ -40,9 +40,9 @@ flush() {
                   -dPostRenderingEnhance=false \
                   -dPreRenderingEnhance=false \
                   -dBATCH ${BUFFER[@]}
-        # else
-        #   echo "Skipping..."
-        # fi
+        else
+          echo "Skipping..."
+        fi
 
         BUFFER=()
 
