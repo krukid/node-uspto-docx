@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { pathForFormFile } from './util/path_helper';
+import { pathForFormFile } from '../util/path_helper';
 import { spawn, execSync } from 'child_process';
 
 function findJSON(rootPath) {

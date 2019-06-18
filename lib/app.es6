@@ -1,6 +1,3 @@
-global.APP_ROOT = __dirname;
-// global.DEBUG = false;
-
 process.on('uncaughtException', (err) => {
   console.error('[FATAL] Uncaught exception', err);
   process.exit(1);
@@ -11,13 +8,13 @@ process.on('unhandledRejection', (reason, promise) => {
   process.exit(1);
 });
 
-import readConfigSync from './lib/util/read_config_sync';
-import forceOutputDirectoriesSync from './lib/util/force_output_directories_sync';
-import { promiseChain } from './lib/util/promise';
-import indexDownload from './lib/index_download';
-import indexDetailsDownload from './lib/index_details_download';
-import detailsGenerate from './lib/details_generate';
-import pdfGenerate from './lib/pdf_generate';
+import readConfigSync from './util/read_config_sync';
+import forceOutputDirectoriesSync from './util/force_output_directories_sync';
+import { promiseChain } from './util/promise';
+import indexDownload from './index_download';
+import indexDetailsDownload from './index_details_download';
+import detailsGenerate from './details_generate';
+import pdfGenerate from './pdf_generate';
 
 // NOTE can launch express web server to render friendly `run.json` state
 // NOTE alternatively use pm2 free tier

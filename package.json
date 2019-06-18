@@ -7,7 +7,8 @@
   "private": true,
   "scripts": {
     "start": "bash ./scripts/mounted/start.sh",
-    "debug": "node -r dotenv/config debug.js",
+    "stats": "node -r ./wrapper ./lib/stats.es6",
+    "check": "bash ./scripts/mounted/check.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
