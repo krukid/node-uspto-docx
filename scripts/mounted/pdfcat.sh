@@ -1,7 +1,7 @@
 #!/bin/bash
 
-IN_PATH=./output/test-merge/190615-split-b
-OUT_PATH=./output/test-merge/190615-join-b
+IN_PATH=./output/test-merge/190717-split-b2
+OUT_PATH=./output/test-merge/190717-join-b2
 #IN_PATH='./output/test-merge/1807-split/no-color/199910$[RD] AND LIVE[LD]/forms-pdf/usa'
 #OUT_PATH=./output/test-merge/1807-test
 
@@ -16,6 +16,17 @@ BUFMAX=1500
 BUFFER=()
 DIR=
 
+testFile() {
+  if [[ "$1" = './output/test-merge/190717-join-b2/no-color/200210$[RD] AND LIVE[LD]/forms-pdf/usa/2627037_2633224.pdf' ]]; then
+    return 1
+  fi
+  if [[ "$1" = './output/test-merge/190717-join-b2/no-color/200210$[RD] AND LIVE[LD]/forms-pdf/usa/2633225_2639380.pdf' ]]; then
+    return 1
+  fi
+  echo "$1 has no match"
+  return 0
+}
+
 flush() {
     if [[ "${#BUFFER[@]}" -gt 0 ]]; then
         NAME_FROM=$(basename "${BUFFER[0]}" .pdf)
@@ -23,8 +34,9 @@ flush() {
         DIR_CAT="${OUT_PATH}${DIR#"$IN_PATH"}"
         PATH_CAT="${DIR_CAT}/${NAME_FROM}_${NAME_TO}.pdf"
 
-        echo "Processing ${PATH_CAT} $([[ ! -e "${PATH_CAT}" ]] && echo "NOT FOUND!")"
-        if [[ "${PATH_CAT}" = './output/test-merge/190615-join-b/no-color/200201$[RD] AND LIVE[LD]/forms-pdf/usa/2529994_2534985.pdf' ]]; then
+        #echo "Processing ${PATH_CAT} $([[ ! -e "${PATH_CAT}" ]] && echo "NOT FOUND!")"
+	testFile "${PATH_CAT}"
+        if [[ $? = 1 ]]; then
           echo "FLUSHING: ${#BUFFER[@]} > ${PATH_CAT}"
           mkdir -p "$DIR_CAT" && \
               gs -q \

@@ -5,8 +5,8 @@ import Url from 'url';
 import iconv from 'iconv-lite';
 import charset from 'charset';
 
-const NETTIMEOUT_CONNECT_MS = 60000;
-const NETTIMEOUT_READ_MS = 60000;
+const NETTIMEOUT_CONNECT_MS = 10000;
+const NETTIMEOUT_READ_MS = 10000;
 // NOTE: request and request-promise set the same timeout for both read and connect, no way around it. Docs lie.
 const REQUESTLIKE_DEFAULTS = {
   timeout: NETTIMEOUT_CONNECT_MS

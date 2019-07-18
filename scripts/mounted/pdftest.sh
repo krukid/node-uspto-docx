@@ -41,8 +41,8 @@ testPDFPages() {
 
 echo "Testing PDFs for errors..."
 
-testPDFDir join ./output/test-merge/190615-join-b
-testPDFPages join ./output/test-merge/190615-join-b
+testPDFDir join ./output/test-merge/190717-join-b2
+testPDFPages join ./output/test-merge/190717-join-b2
 
 #testPDFDir split ./output/test-merge/190418-split-b
 

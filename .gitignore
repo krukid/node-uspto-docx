@@ -6,3 +6,4 @@ output.log
 config.json
 .trash
 *.prev
+.DS_Store
